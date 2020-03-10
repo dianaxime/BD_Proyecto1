@@ -26,11 +26,43 @@ def conectar():
         # Se muestra la versión por pantalla
         print(db_version)
         # Ejecutamos una consulta
-        cur.execute( "SELECT a, b, c FROM ejemplo" )
+        cur.execute( "SELECT genre.name, COUNT(*) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY COUNT(*) DESC LIMIT 10" )
+
+
+        # Recorremos los resultados y los mostramos
+        for a,b in cur.fetchall() :
+            print(a,b)
+
+        print("--------------------------------------------------")
+
+
+        # Ejecutamos una consulta
+        cur.execute( "SELECT artist.name, COUNT(*) FROM album JOIN artist ON artist.artistid=album.artistid GROUP BY artist.artistid ORDER BY COUNT(*) DESC LIMIT 10" )
+
+        for a,b in cur.fetchall() :
+            print(a,b)
+
+        print("--------------------------------------------------")
+
+       # Ejecutamos una consulta
+        cur.execute( "SELECT artist.name, track.name, track.milliseconds FROM album JOIN track ON track.albumid=album.albumid JOIN artist ON album.artistid=artist.artistid ORDER BY track.milliseconds DESC LIMIT 10 ")
 
         # Recorremos los resultados y los mostramos
         for a,b,c in cur.fetchall() :
             print(a,b,c)
+
+        print("--------------------------------------------------")
+
+
+        # Ejecutamos una consulta
+        cur.execute( "SELECT genre.name, AVG(track.milliseconds) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY AVG(track.milliseconds) DESC" )
+
+
+        # Recorremos los resultados y los mostramos
+        for a,b in cur.fetchall() :
+            print(a,b)
+
+        print("--------------------------------------------------")
 
         # Cerremos el cursor
         cur.close()
