@@ -59,6 +59,7 @@ def conectar():
         print(IDoficial)
         cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid IN (SELECT track.trackid FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s))",(IDoficial,))
         cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid IN (SELECT track.trackid FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s))",(IDoficial,))
+        cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid = %s",(IDoficial,))
         cur.execute("DELETE FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)",(IDoficial,))
         cur.execute("DELETE FROM album WHERE album.artistid = '{0}'".format(IDoficial))
         cur.execute("DELETE FROM artist WHERE artist.artistid = '{0}'".format(IDoficial))
