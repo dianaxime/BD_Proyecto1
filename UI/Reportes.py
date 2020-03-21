@@ -9,9 +9,11 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from masCanciones import *
+from artistasAlbums import *
 
 
-class Ui_Form(object):
+class Ui_Reportes(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(388, 334)
@@ -47,11 +49,28 @@ class Ui_Form(object):
         self.generarReporte.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.generarReporte.setObjectName("generarReporte")
+        #self.generarReporte.clicked.connect(self.goTo)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
+    def goTo(self, Form):
+        print(Form)
+        if self.masCanciones.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_masCanciones()
+            self.ui.setupUi(self.window)
+            Form.hide()
+            self.window.show()
+        if self.masAlbums.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_artistasAlbums()
+            self.ui.setupUi(self.window)
+            Form.hide()
+            self.window.show()
+
     def retranslateUi(self, Form):
+        #print(Form)
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.reportes.setTitle(_translate("Form", "Reportes"))
@@ -61,13 +80,14 @@ class Ui_Form(object):
         self.masRegistradas.setText(_translate("Form", "Usuarios con más canciones registradas"))
         self.promedioDuracion.setText(_translate("Form", "Promedio de duración de canciones por género"))
         self.generarReporte.setText(_translate("Form", "Generar"))
+        self.generarReporte.clicked.connect(lambda:self.goTo(Form))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_Reportes()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Reportes")
