@@ -8,7 +8,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMessageBox
 from Actions import Ui_bienvenidaLabel
+from SignIn import Ui_LogIn
 
 
 class Ui_SignInWidget(object):
@@ -17,6 +21,7 @@ class Ui_SignInWidget(object):
         SignInWidget.resize(322, 341)
         SignInWidget.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        SignInWidget.setWindowIcon(QIcon('icono.png'))
         self.userLabel = QtWidgets.QLabel(SignInWidget)
         self.userLabel.setGeometry(QtCore.QRect(30, 60, 71, 16))
         font = QtGui.QFont()
@@ -31,11 +36,14 @@ class Ui_SignInWidget(object):
         self.passwordLabel.setObjectName("passwordLabel")
         self.userInput = QtWidgets.QLineEdit(SignInWidget)
         self.userInput.setGeometry(QtCore.QRect(130, 60, 151, 21))
-        self.userInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.userInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.userInput.setObjectName("userInput")
         self.passwordInput = QtWidgets.QLineEdit(SignInWidget)
+        self.passwordInput.setEchoMode(QLineEdit.Password)
         self.passwordInput.setGeometry(QtCore.QRect(130, 110, 151, 20))
-        self.passwordInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.passwordInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.passwordInput.setObjectName("passwordInput")
         self.signIn = QtWidgets.QPushButton(SignInWidget)
         self.signIn.setGeometry(QtCore.QRect(90, 180, 141, 41))
@@ -47,6 +55,7 @@ class Ui_SignInWidget(object):
         self.signIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.signIn.setObjectName("signIn")
+        self.signIn.clicked.connect(self.openSignIn)
         self.logIn = QtWidgets.QPushButton(SignInWidget)
         self.logIn.setGeometry(QtCore.QRect(90, 250, 141, 41))
         font = QtGui.QFont()
@@ -57,6 +66,7 @@ class Ui_SignInWidget(object):
         self.logIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.logIn.setObjectName("logIn")
+        #aqui en vez de openActions seria validate para validar la data ingresada
         self.logIn.clicked.connect(self.openActions)
         self.retranslateUi(SignInWidget)
         QtCore.QMetaObject.connectSlotsByName(SignInWidget)
@@ -70,11 +80,37 @@ class Ui_SignInWidget(object):
         self.logIn.setText(_translate("SignInWidget", "Log In"))
 
     def openActions(self):
+        #Aqui iria verificar el user y password en BD
+        user=self.userInput.text()
+        password=self.passwordInput.text()
+        if user != '' and password != '':
+            if user == password:
+                self.window = QtWidgets.QWidget()
+                self.ui = Ui_bienvenidaLabel()
+                self.ui.setupUi(self.window)
+                SignInWidget.hide()
+                self.window.show()
+            else: 
+                invalid=QMessageBox()
+                invalid.setIcon(QMessageBox.Information)
+                invalid.setWindowTitle("INVALIDO")
+                invalid.setText("Usuario o Contraseña incorrectos")
+                invalid.exec()
+        else:
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("INCOMPLETO")
+            blank.setText("Por favor llene los campos")
+            blank.exec()
+
+
+    def openSignIn(self):
         self.window = QtWidgets.QWidget()
-        self.ui = Ui_bienvenidaLabel()
+        self.ui = Ui_LogIn()
         self.ui.setupUi(self.window)
         SignInWidget.hide()
         self.window.show()
+
 
 if __name__ == "__main__":
     import sys
@@ -83,4 +119,5 @@ if __name__ == "__main__":
     ui = Ui_SignInWidget()
     ui.setupUi(SignInWidget)
     SignInWidget.show()
+    SignInWidget.setWindowTitle("Log In")
     sys.exit(app.exec_())

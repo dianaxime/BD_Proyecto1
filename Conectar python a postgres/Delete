@@ -29,47 +29,18 @@ def conectar():
 
         print("--------------------------------------------------")
 
-        ##se borra cancion
-        """nombreTrack = "hp"
-        cur.execute("DELETE FROM track WHERE track.name = %s",(nombreTrack,))
-        # Recorremos los resultados y los mostramos
+        
         cur.execute("SELECT * FROM track")
-        for a,b,c,d,e,f,g,h,i in cur.fetchall() :
-            print(a,b,c,d,e,f,g,h,i)
+        canciones=cur.fetchall()
+        n=1
+        for i in canciones:
+            print (i[0])
+            cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (n, True, i[0],))
+            n+=1
+            #print("este es id de actividad_track %s",(n))
+            #cur.execute("INSERT INTO actividad_track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nameTrack, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, Composer, Milliseconds, Bytes, Unitprice,))
 
-        print("--------------------------------------------------")"""
-
-        ##se borra album
-        nombreAlbum = "Facelift"
-        #Si quiere borrar un album antes se borran todas las canciones que estan relacionadas con el album
-        #try:
-        cur.execute("SELECT album.albumid FROM album WHERE album.title = '{0}'".format(nombreAlbum))
-        IDAlbum=cur.fetchall()
-        print(IDAlbum)
-        IDoficial=(IDAlbum[0][0])
-        print(IDoficial)
-        cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
-        cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
-        cur.execute("DELETE FROM track WHERE track.albumid = %s",(IDoficial,))
-        cur.execute("DELETE FROM album WHERE album.title = '{0}'".format(nombreAlbum))
-        #except :
-            #print("Unknown error occurred")
-        # Recorremos los resultados y los mostramos
-        """cur.execute("SELECT * FROM album")
-        for a,b,c in cur.fetchall() :
-            print(a,b,c)
-        print("--------------------------------------------------")"""
-
-        ##se borra artista
-        """nombreArtist = "Maluma"
-        #Si quiere borrar un artista antes se borran todas las canciones y albums relacionados al artista
-        cur.execute("DELETE FROM artist WHERE artist.name=%s",(nombreArtist,))
-        # Recorremos los resultados y los mostramos
-        cur.execute("SELECT * FROM artist")
-        for a,b in cur.fetchall() :
-            print(a,b)
-
-        print("--------------------------------------------------")"""
+        conexion.commit()
 
 
         # Cerremos el cursor
