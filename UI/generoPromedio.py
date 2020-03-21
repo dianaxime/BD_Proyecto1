@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'masCanciones.ui'
+# Form implementation generated from reading ui file 'generoPromedio.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -14,7 +14,7 @@ import psycopg2
 from config import config
 from Reportes import *
 
-class Ui_masCanciones(object):
+class Ui_generoPromedio(object):
     def conectar(self):
         """ Conexión al servidor de pases de datos PostgreSQL """
         conexion = None
@@ -30,7 +30,7 @@ class Ui_masCanciones(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             # Ejecutamos una consulta
-            cur.execute( "SELECT genre.name, COUNT(*) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY COUNT(*) DESC LIMIT 10" )
+            cur.execute( "SELECT genre.name, AVG(track.milliseconds) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY AVG(track.milliseconds) DESC" )
             #Insertamos los datos devueltos por la consulta en la tabla
             row = 0
             for a,b in cur.fetchall():
@@ -46,7 +46,6 @@ class Ui_masCanciones(object):
         finally:
             if conexion is not None:
                 conexion.close()
-
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(560, 449)
@@ -57,9 +56,8 @@ class Ui_masCanciones(object):
 "color: rgb(72, 72, 72);")
         Form.setWindowIcon(QIcon('icono.png'))
         self.volverButton.setObjectName("volverButton")
-        #self.volverButton.clicked.connect(self.openReportes)
         self.titutloLabel = QtWidgets.QLabel(Form)
-        self.titutloLabel.setGeometry(QtCore.QRect(20, 20, 521, 21))
+        self.titutloLabel.setGeometry(QtCore.QRect(20, 10, 521, 31))
         self.titutloLabel.setStyleSheet("color: rgb(236, 236, 236);")
         self.titutloLabel.setObjectName("titutloLabel")
         self.tableWidget = QtWidgets.QTableWidget(Form)
@@ -68,7 +66,7 @@ class Ui_masCanciones(object):
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setRowCount(0)
-        nombreColumnas = ("Género","Cantidad de canciones")
+        nombreColumnas = ("Género","Duración promedio de canciones (ms)")
         # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
         self.tableWidget.setColumnWidth(0, 240)
@@ -77,7 +75,6 @@ class Ui_masCanciones(object):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
     def openReportes(self, Form):
         #self.window = QtWidgets.QWidget()
         #self.ui = Ui_Reportes()
@@ -85,21 +82,19 @@ class Ui_masCanciones(object):
         Form.hide()
         #self.window.show()
 
-
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Generos con mas canciones"))
+        Form.setWindowTitle(_translate("Form", "Promedio de duracion por genero"))
         self.volverButton.setText(_translate("Form", "Volver"))
-        self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Géneros con más canciones</span></p></body></html>"))
+        self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Promedio de duración de canciones por género</span></p></body></html>"))
         self.volverButton.clicked.connect(lambda:self.openReportes(Form))
 
 """if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_masCanciones()
+    ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
-    Form.setWindowTitle("Generos con mas canciones")
     sys.exit(app.exec_())
 """

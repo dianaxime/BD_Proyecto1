@@ -80,17 +80,16 @@ class Ui_artistasAlbums(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def openReportes(self, Form):
-        print(Form)
-        self.window = QtWidgets.QWidget()
-        self.ui = Ui_Reportes()
-        self.ui.setupUi(self.window)
+        #self.window = QtWidgets.QWidget()
+        #self.ui = Ui_Reportes()
+        #self.ui.setupUi(self.window)
         Form.hide()
-        self.window.show()
+        #self.window.show()
 
-        
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Artistas con mas albums", "Form"))
         self.volverButton.setText(_translate("Form", "Volver"))
         self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Artistas con más álbums</span></p></body></html>"))
         self.volverButton.clicked.connect(lambda:self.openReportes(Form))

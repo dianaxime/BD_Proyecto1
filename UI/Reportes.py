@@ -11,6 +11,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from masCanciones import *
 from artistasAlbums import *
+from cancionesDuracion import *
+from generoPromedio import *
 
 
 class Ui_Reportes(object):
@@ -55,24 +57,34 @@ class Ui_Reportes(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def goTo(self, Form):
-        print(Form)
         if self.masCanciones.isChecked():
             self.window = QtWidgets.QWidget()
             self.ui = Ui_masCanciones()
             self.ui.setupUi(self.window)
-            Form.hide()
+            #Form.hide()
             self.window.show()
         if self.masAlbums.isChecked():
             self.window = QtWidgets.QWidget()
             self.ui = Ui_artistasAlbums()
             self.ui.setupUi(self.window)
-            Form.hide()
+            #Form.hide()
+            self.window.show()
+        if self.mayorDuracion.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_cancionesDuracion()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        if self.promedioDuracion.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_generoPromedio()
+            self.ui.setupUi(self.window)
+            #Form.hide()
             self.window.show()
 
     def retranslateUi(self, Form):
-        #print(Form)
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Reportes"))
         self.reportes.setTitle(_translate("Form", "Reportes"))
         self.masCanciones.setText(_translate("Form", "Géneros con más canciones"))
         self.masAlbums.setText(_translate("Form", "Artistas con más álbums individuales"))
