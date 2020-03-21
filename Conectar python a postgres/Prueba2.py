@@ -63,7 +63,7 @@ def conectar():
         cur.execute("DELETE FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)",(IDoficial,))
         cur.execute("DELETE FROM album WHERE album.artistid = '{0}'".format(IDoficial))
         cur.execute("DELETE FROM artist WHERE artist.artistid = '{0}'".format(IDoficial))
-        
+
         print("Album")
         cur.execute("SELECT * FROM album LIMIT 15")
         # Recorremos los resultados y los mostramos
@@ -86,9 +86,6 @@ def conectar():
         print("--------------------------------------------------")
 
 
-
-
-        # Cerremos el cursor
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)

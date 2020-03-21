@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from Actions import Ui_bienvenidaLabel
 
 
 class Ui_SignInWidget(object):
@@ -56,7 +57,7 @@ class Ui_SignInWidget(object):
         self.logIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.logIn.setObjectName("logIn")
-
+        self.logIn.clicked.connect(self.openActions)
         self.retranslateUi(SignInWidget)
         QtCore.QMetaObject.connectSlotsByName(SignInWidget)
 
@@ -68,6 +69,12 @@ class Ui_SignInWidget(object):
         self.signIn.setText(_translate("SignInWidget", "Sign In"))
         self.logIn.setText(_translate("SignInWidget", "Log In"))
 
+    def openActions(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_bienvenidaLabel()
+        self.ui.setupUi(self.window)
+        SignInWidget.hide()
+        self.window.show()
 
 if __name__ == "__main__":
     import sys
