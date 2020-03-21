@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
 
-class Ui_Form(object):
+class Ui_ModificarAlbum(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(333, 260)
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_ModificarAlbum()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Modificar Album")

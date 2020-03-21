@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
 
-class Ui_Form(object):
+class Ui_EliminarAlbum(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(339, 230)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_EliminarAlbum()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Eliminar Album")

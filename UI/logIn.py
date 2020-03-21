@@ -11,12 +11,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QMessageBox
-from Actions import Ui_bienvenidaLabel
-from SignIn import Ui_LogIn
+from Actions import *
+#from SignIn import Ui_LogIn
+from SignIn import *
+import psycopg2
+from config import config
 
 
 class Ui_SignInWidget(object):
+    #print("estoy aqui primer")
     def setupUi(self, SignInWidget):
+        #print("estoy aqui segundo")
+        self.SignInWidget=SignInWidget
         SignInWidget.setObjectName("SignInWidget")
         SignInWidget.resize(322, 341)
         SignInWidget.setStyleSheet("background-color: rgb(85, 85, 255);\n"
@@ -69,39 +75,76 @@ class Ui_SignInWidget(object):
         #aqui en vez de openActions seria validate para validar la data ingresada
         self.logIn.clicked.connect(self.openActions)
         self.retranslateUi(SignInWidget)
+        #self.openActions(SignInWidget)
         QtCore.QMetaObject.connectSlotsByName(SignInWidget)
 
     def retranslateUi(self, SignInWidget):
         _translate = QtCore.QCoreApplication.translate
         SignInWidget.setWindowTitle(_translate("SignInWidget", "Form"))
-        self.userLabel.setText(_translate("SignInWidget", "Usuario:"))
+        self.userLabel.setText(_translate("SignInWidget", "Correo:"))
         self.passwordLabel.setText(_translate("SignInWidget", "Contraseña:"))
         self.signIn.setText(_translate("SignInWidget", "Sign In"))
         self.logIn.setText(_translate("SignInWidget", "Log In"))
 
     def openActions(self):
         #Aqui iria verificar el user y password en BD
-        user=self.userInput.text()
-        password=self.passwordInput.text()
-        if user != '' and password != '':
-            if user == password:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_bienvenidaLabel()
-                self.ui.setupUi(self.window)
-                SignInWidget.hide()
-                self.window.show()
-            else: 
-                invalid=QMessageBox()
-                invalid.setIcon(QMessageBox.Information)
-                invalid.setWindowTitle("INVALIDO")
-                invalid.setText("Usuario o Contraseña incorrectos")
-                invalid.exec()
-        else:
-            blank=QMessageBox()
-            blank.setIcon(QMessageBox.Information)
-            blank.setWindowTitle("INCOMPLETO")
-            blank.setText("Por favor llene los campos")
-            blank.exec()
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            user=self.userInput.text()
+            password=self.passwordInput.text()
+
+            if user != '' and password != '':
+                cur.execute("SELECT contraseña FROM permisos_usuario JOIN customer ON customer.customerid=permisos_usuario.customerid  WHERE customer.email=%s",(user,))
+                contrasenaUsuario=cur.fetchall()
+                print(password)
+                if (len(contrasenaUsuario)==0):
+                    invalid=QMessageBox()
+                    invalid.setIcon(QMessageBox.Information)
+                    invalid.setWindowTitle("INVALIDO")
+                    invalid.setText("Correo no registrado")
+                    invalid.exec()
+                else:
+                    if contrasenaUsuario[0][0] == password:
+                        #SignInWidget.hide()
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_bienvenidaLabel()
+                        self.ui.setupUi(self.window)
+                        #SignInWidget.hide()
+                        self.window.show()
+                    else: 
+                        invalid=QMessageBox()
+                        invalid.setIcon(QMessageBox.Information)
+                        invalid.setWindowTitle("INVALIDO")
+                        invalid.setText("Contraseña incorrectos")
+                        invalid.exec()
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
     def openSignIn(self):

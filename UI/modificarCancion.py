@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
 
-class Ui_Form(object):
+class Ui_ModificarCancion(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(353, 510)
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_ModificarCancion()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Modificar Cancion")

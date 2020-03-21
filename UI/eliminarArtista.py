@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
 
-class Ui_Form(object):
+class Ui_EliminarArtista(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(331, 229)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_EliminarArtista()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Eliminar Artista")
