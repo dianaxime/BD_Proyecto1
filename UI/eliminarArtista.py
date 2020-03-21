@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_Form(object):
@@ -16,9 +17,11 @@ class Ui_Form(object):
         Form.resize(331, 229)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.nombreInput = QtWidgets.QLineEdit(Form)
         self.nombreInput.setGeometry(QtCore.QRect(130, 100, 161, 20))
-        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.nombreInput.setObjectName("nombreInput")
         self.eliminarArtistaLabel = QtWidgets.QLabel(Form)
         self.eliminarArtistaLabel.setGeometry(QtCore.QRect(90, 30, 151, 41))
@@ -64,4 +67,5 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
+    Form.setWindowTitle("Eliminar Artista")
     sys.exit(app.exec_())

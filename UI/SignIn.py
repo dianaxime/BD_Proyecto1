@@ -8,6 +8,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
+
 
 
 class Ui_LogIn(object):
@@ -16,6 +18,7 @@ class Ui_LogIn(object):
         LogIn.resize(261, 353)
         LogIn.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        LogIn.setWindowIcon(QIcon('icono.png'))
         self.nombreLabel = QtWidgets.QLabel(LogIn)
         self.nombreLabel.setGeometry(QtCore.QRect(20, 40, 47, 13))
         font = QtGui.QFont()
@@ -54,27 +57,33 @@ class Ui_LogIn(object):
         self.passwordLabel.setObjectName("passwordLabel")
         self.nombreInput = QtWidgets.QLineEdit(LogIn)
         self.nombreInput.setGeometry(QtCore.QRect(110, 40, 113, 20))
-        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.nombreInput.setObjectName("nombreInput")
         self.apellidoInput = QtWidgets.QLineEdit(LogIn)
         self.apellidoInput.setGeometry(QtCore.QRect(110, 80, 113, 20))
-        self.apellidoInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.apellidoInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.apellidoInput.setObjectName("apellidoInput")
         self.paisInput = QtWidgets.QLineEdit(LogIn)
         self.paisInput.setGeometry(QtCore.QRect(110, 120, 113, 20))
-        self.paisInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.paisInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.paisInput.setObjectName("paisInput")
         self.emailInput = QtWidgets.QLineEdit(LogIn)
         self.emailInput.setGeometry(QtCore.QRect(110, 160, 113, 20))
-        self.emailInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.emailInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.emailInput.setObjectName("emailInput")
         self.userInput = QtWidgets.QLineEdit(LogIn)
         self.userInput.setGeometry(QtCore.QRect(110, 200, 113, 20))
-        self.userInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.userInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.userInput.setObjectName("userInput")
         self.passwordInput = QtWidgets.QLineEdit(LogIn)
         self.passwordInput.setGeometry(QtCore.QRect(110, 240, 113, 20))
-        self.passwordInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.passwordInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.passwordInput.setObjectName("passwordInput")
         self.sigInButton = QtWidgets.QPushButton(LogIn)
         self.sigInButton.setGeometry(QtCore.QRect(70, 290, 101, 41))
@@ -109,4 +118,5 @@ if __name__ == "__main__":
     ui = Ui_LogIn()
     ui.setupUi(LogIn)
     LogIn.show()
+    LogIn.setWindowTitle("Sign In")
     sys.exit(app.exec_())

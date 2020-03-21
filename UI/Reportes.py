@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_Form(object):
@@ -16,6 +17,7 @@ class Ui_Form(object):
         Form.resize(388, 334)
         Form.setSizeIncrement(QtCore.QSize(0, 0))
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.reportes = QtWidgets.QGroupBox(Form)
         self.reportes.setGeometry(QtCore.QRect(20, 40, 331, 251))
         self.reportes.setStyleSheet("color: rgb(236, 236, 236);")
@@ -68,4 +70,5 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
+    Form.setWindowTitle("Reportes")
     sys.exit(app.exec_())

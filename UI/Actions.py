@@ -8,6 +8,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
+
 
 
 class Ui_bienvenidaLabel(object):
@@ -15,6 +17,7 @@ class Ui_bienvenidaLabel(object):
         bienvenidaLabel.setObjectName("bienvenidaLabel")
         bienvenidaLabel.resize(464, 425)
         bienvenidaLabel.setStyleSheet("background-color: rgb(85, 85, 255);")
+        bienvenidaLabel.setWindowIcon(QIcon('icono.png'))
         self.label = QtWidgets.QLabel(bienvenidaLabel)
         self.label.setGeometry(QtCore.QRect(100, 30, 271, 51))
         font = QtGui.QFont()
@@ -125,4 +128,5 @@ if __name__ == "__main__":
     ui = Ui_bienvenidaLabel()
     ui.setupUi(bienvenidaLabel)
     bienvenidaLabel.show()
+    bienvenidaLabel.setWindowTitle("Principal")
     sys.exit(app.exec_())

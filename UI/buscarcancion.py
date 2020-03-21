@@ -8,6 +8,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
+
 
 
 class Ui_Form(object):
@@ -16,6 +18,7 @@ class Ui_Form(object):
         Form.resize(339, 221)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.continuarButton = QtWidgets.QPushButton(Form)
         self.continuarButton.setGeometry(QtCore.QRect(100, 150, 131, 41))
         font = QtGui.QFont()
@@ -37,7 +40,8 @@ class Ui_Form(object):
         self.buscarLabel.setObjectName("buscarLabel")
         self.nombreInput = QtWidgets.QLineEdit(Form)
         self.nombreInput.setGeometry(QtCore.QRect(130, 100, 161, 20))
-        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.nombreInput.setObjectName("nombreInput")
         self.nombreLabel = QtWidgets.QLabel(Form)
         self.nombreLabel.setGeometry(QtCore.QRect(40, 100, 51, 16))
@@ -64,4 +68,5 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
+    Form.setWindowTitle("Buscar Cancion")
     sys.exit(app.exec_())

@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_Form(object):
@@ -16,6 +17,7 @@ class Ui_Form(object):
         Form.resize(344, 229)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.buscarLabel = QtWidgets.QLabel(Form)
         self.buscarLabel.setGeometry(QtCore.QRect(50, 30, 251, 41))
         font = QtGui.QFont()
@@ -27,7 +29,8 @@ class Ui_Form(object):
         self.buscarLabel.setObjectName("buscarLabel")
         self.nombreInput = QtWidgets.QLineEdit(Form)
         self.nombreInput.setGeometry(QtCore.QRect(140, 100, 161, 20))
-        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.nombreInput.setObjectName("nombreInput")
         self.continuarButton = QtWidgets.QPushButton(Form)
         self.continuarButton.setGeometry(QtCore.QRect(110, 150, 131, 41))
@@ -64,4 +67,5 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
+    Form.setWindowTitle("Inactivar Cancion")
     sys.exit(app.exec_())

@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_Form(object):
@@ -16,6 +17,7 @@ class Ui_Form(object):
         Form.resize(335, 252)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.nombreLabel = QtWidgets.QLabel(Form)
         self.nombreLabel.setGeometry(QtCore.QRect(40, 90, 51, 16))
         font = QtGui.QFont()
@@ -24,7 +26,8 @@ class Ui_Form(object):
         self.nombreLabel.setObjectName("nombreLabel")
         self.tituloInput = QtWidgets.QLineEdit(Form)
         self.tituloInput.setGeometry(QtCore.QRect(130, 90, 161, 20))
-        self.tituloInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.tituloInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.tituloInput.setObjectName("tituloInput")
         self.ingresarAlbumLabel = QtWidgets.QLabel(Form)
         self.ingresarAlbumLabel.setGeometry(QtCore.QRect(90, 20, 151, 41))
@@ -53,7 +56,8 @@ class Ui_Form(object):
         self.artistaLabel.setObjectName("artistaLabel")
         self.artistaInput = QtWidgets.QLineEdit(Form)
         self.artistaInput.setGeometry(QtCore.QRect(130, 140, 161, 20))
-        self.artistaInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.artistaInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.artistaInput.setObjectName("artistaInput")
 
         self.retranslateUi(Form)
@@ -63,7 +67,6 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.nombreLabel.setText(_translate("Form", "Título:"))
-        self.tituloInput.setText(_translate("Form", "Ingresar Álbum"))
         self.ingresarAlbumLabel.setText(_translate("Form", "Ingresar Álbum"))
         self.ingresarButton.setText(_translate("Form", "Ingresar"))
         self.artistaLabel.setText(_translate("Form", "Artista:"))
@@ -76,4 +79,5 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
+    Form.setWindowTitle("Ingresar Album")
     sys.exit(app.exec_())

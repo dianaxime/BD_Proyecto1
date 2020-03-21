@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_Form(object):
@@ -16,6 +17,7 @@ class Ui_Form(object):
         Form.resize(353, 510)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.tipoLabel = QtWidgets.QLabel(Form)
         self.tipoLabel.setGeometry(QtCore.QRect(50, 180, 47, 13))
         font = QtGui.QFont()
@@ -30,11 +32,13 @@ class Ui_Form(object):
         self.generoLabel.setObjectName("generoLabel")
         self.nombreInput = QtWidgets.QLineEdit(Form)
         self.nombreInput.setGeometry(QtCore.QRect(140, 100, 161, 20))
-        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.nombreInput.setObjectName("nombreInput")
         self.tipoInput = QtWidgets.QLineEdit(Form)
         self.tipoInput.setGeometry(QtCore.QRect(140, 180, 161, 20))
-        self.tipoInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.tipoInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.tipoInput.setObjectName("tipoInput")
         self.precioLabel = QtWidgets.QLabel(Form)
         self.precioLabel.setGeometry(QtCore.QRect(50, 380, 47, 13))
@@ -60,7 +64,8 @@ class Ui_Form(object):
         self.nombreLabel.setObjectName("nombreLabel")
         self.precioInput = QtWidgets.QLineEdit(Form)
         self.precioInput.setGeometry(QtCore.QRect(140, 380, 161, 20))
-        self.precioInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.precioInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.precioInput.setObjectName("precioInput")
         self.duracionLabel = QtWidgets.QLabel(Form)
         self.duracionLabel.setGeometry(QtCore.QRect(50, 300, 61, 16))
@@ -76,11 +81,13 @@ class Ui_Form(object):
         self.compositorLabel.setObjectName("compositorLabel")
         self.albumInput = QtWidgets.QLineEdit(Form)
         self.albumInput.setGeometry(QtCore.QRect(140, 140, 161, 20))
-        self.albumInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.albumInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.albumInput.setObjectName("albumInput")
         self.compositorInput = QtWidgets.QLineEdit(Form)
         self.compositorInput.setGeometry(QtCore.QRect(140, 260, 161, 20))
-        self.compositorInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.compositorInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.compositorInput.setObjectName("compositorInput")
         self.tamanoLabel = QtWidgets.QLabel(Form)
         self.tamanoLabel.setGeometry(QtCore.QRect(50, 340, 51, 16))
@@ -90,7 +97,8 @@ class Ui_Form(object):
         self.tamanoLabel.setObjectName("tamanoLabel")
         self.duracionInput = QtWidgets.QLineEdit(Form)
         self.duracionInput.setGeometry(QtCore.QRect(140, 300, 161, 20))
-        self.duracionInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.duracionInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.duracionInput.setObjectName("duracionInput")
         self.albumLabel = QtWidgets.QLabel(Form)
         self.albumLabel.setGeometry(QtCore.QRect(50, 140, 47, 13))
@@ -100,11 +108,13 @@ class Ui_Form(object):
         self.albumLabel.setObjectName("albumLabel")
         self.tamanoInput = QtWidgets.QLineEdit(Form)
         self.tamanoInput.setGeometry(QtCore.QRect(140, 340, 161, 20))
-        self.tamanoInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.tamanoInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.tamanoInput.setObjectName("tamanoInput")
         self.generoInput = QtWidgets.QLineEdit(Form)
         self.generoInput.setGeometry(QtCore.QRect(140, 220, 161, 20))
-        self.generoInput.setStyleSheet("background-color: rgb(243, 243, 243);")
+        self.generoInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
         self.generoInput.setObjectName("generoInput")
         self.modificarCancionLabel = QtWidgets.QLabel(Form)
         self.modificarCancionLabel.setGeometry(QtCore.QRect(100, 30, 151, 41))
@@ -141,4 +151,5 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
+    Form.setWindowTitle("Modificar Cancion")
     sys.exit(app.exec_())
