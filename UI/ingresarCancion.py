@@ -186,18 +186,22 @@ class Ui_IngresarCancion(object):
                 cur.execute( "SELECT album.albumid FROM album WHERE album.title=%s",(album,))
                 IDAlbum=cur.fetchall()
                 IDAlbumOficial=(IDAlbum[0][0])
+                print(IDAlbum)
                 #Se selecciona busca el ID del tipo ingresado
                 cur.execute( "SELECT mediatype.mediatypeid FROM mediatype WHERE mediatype.name=%s",(tipo,))
                 IDMediaType=cur.fetchall()
+                print(IDMediaType)
                 IDMediaTypeOficial=(IDMediaType[0][0])
                 #Se selecciona busca el ID del genero ingresado
                 cur.execute( "SELECT genre.genreid FROM genre WHERE genre.name=%s",(genero,))
                 IDGenre=cur.fetchall()
+                print("este es genero")
                 IDGenreOficial=(IDGenre[0][0])
                 #Se agrega a la DB
                 cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio,))
+                cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
                 conexion.commit()
-                cur.execute("SELECT * FROM track LIMIT 10 ORDER BY track.trackid DESC")
+                cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
                 # Recorremos los resultados y los mostramos
                 for a,b,c,d,e,f,g,h,i in cur.fetchall() :
                         print(a,b,c,d,e,f,g,h,i)

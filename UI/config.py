@@ -15,5 +15,3 @@ def config(archivo='base_de_datos.ini', seccion='postgresql'):
         return db
     else:
         raise Exception('Secccion {0} no encontrada en el archivo {1}'.format(seccion, archivo))
-
-

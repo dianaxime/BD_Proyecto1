@@ -102,7 +102,7 @@ def conectar():
 
         print("--------------------------------------------------")"""
         ##crear usuario
-        firstName="Juan Diego"
+        """firstName="Juan Diego"
         lastName="Vásquez"
         email="juan.diego.vf@gmail.com"
         contrasena="soyJuanDiego123"
@@ -132,6 +132,7 @@ def conectar():
         print("--------------------------------------------------")
 
         ##crear admin
+        """
         """firstName="Juan Carlos"
         lastName="Vásquez"
         email="juancvs@gmail.com"
@@ -191,7 +192,8 @@ def conectar():
         conexion.commit()
         cur.execute("DELETE FROM customer WHERE customer.firstname = 'Juan Diego'",(IDoficial,))
         conexion.commit()"""
-
+        """cur.execute("DELETE FROM track WHERE track.trackid = 3504")
+        conexion.commit()"""
         # Cerremos el cursor
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
