@@ -12,7 +12,7 @@ from PyQt5.QtGui import QIcon
 
 
 
-class Ui_Form(object):
+class Ui_BuscarCancion(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(339, 221)
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_BuscarCancion()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Buscar Cancion")

@@ -13,9 +13,9 @@ from PyQt5.QtWidgets import QMessageBox
 from ingresarAlbum import Ui_IngresarAlbum
 from ingresarArtista import Ui_IngresarArtista
 from ingresarCancion import Ui_IngresarCancion
-from modificarAlbum import Ui_ModificarAlbum
-from modificarArtista import Ui_ModificarArtista
-from modificarCancion import Ui_ModificarCancion
+from buscarAlbum import Ui_BuscarAlbum
+from buscarArtista import Ui_BuscarArtista
+from buscarCancion import Ui_BuscarCancion
 from eliminarAlbum import Ui_EliminarAlbum
 from eliminarArtista import Ui_EliminarArtista
 from eliminarCancion import Ui_EliminarCancion
@@ -173,19 +173,19 @@ class Ui_bienvenidaLabel(object):
         #Se verifica cual esta seleccionado
         if self.cancionModificar.isChecked() == True:
                 self.window = QtWidgets.QWidget()
-                self.ui = Ui_ModificarCancion()
+                self.ui = Ui_BuscarCancion()
                 self.ui.setupUi(self.window)
                 bienvenidaLabel.hide()
                 self.window.show()
         elif self.artistaModificar.isChecked() == True:
                 self.window = QtWidgets.QWidget()
-                self.ui = Ui_ModificarArtista()
+                self.ui = Ui_BuscarArtista()
                 self.ui.setupUi(self.window)
                 bienvenidaLabel.hide()
                 self.window.show()
         elif self.albumModificar.isChecked() == True:
                 self.window = QtWidgets.QWidget()
-                self.ui = Ui_ModificarAlbum()
+                self.ui = Ui_BuscarAlbum()
                 self.ui.setupUi(self.window)
                 bienvenidaLabel.hide()
                 self.window.show()

@@ -9,6 +9,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
+import psycopg2
+from config import config
 
 
 class Ui_IngresarCancion(object):
@@ -125,6 +128,7 @@ class Ui_IngresarCancion(object):
         self.ingresarButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.ingresarButton.setObjectName("ingresarButton")
+        self.ingresarButton.clicked.connect(self.agregarCancion)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -142,6 +146,89 @@ class Ui_IngresarCancion(object):
         self.tamanoLabel.setText(_translate("Form", "Tamaño:"))
         self.precioLabel.setText(_translate("Form", "Precio:"))
         self.ingresarButton.setText(_translate("Form", "Ingresar"))
+
+    def agregarCancion(self):
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            nombre=self.nombreInput.text()
+            album=self.albumInput.text()
+            tipo=self.tipoInput.text()
+            genero=self.generoInput.text()
+            compositor=self.compositorInput.text()
+            duracion=self.duracionInput.text()
+            size=self.tamanoInput.text()
+            precio=self.precioInput.text()
+
+            if nombre != '' or album != '' or tipo != '' or genero != '' or compositor != '' or duracion != '' or size != '' or precio != '':
+                #Se selecciona el ID mayor y se crea el nuevo
+                cur.execute( "SELECT MAX(track.trackid) FROM track" )
+                IDTrack=cur.fetchall()
+                IDoficial=(IDTrack[0][0])
+                IDoficial += 1
+                print(IDoficial)
+                #Se selecciona busca el ID del album ingresado
+                cur.execute( "SELECT album.albumid FROM album WHERE album.title=%s",(album,))
+                IDAlbum=cur.fetchall()
+                IDAlbumOficial=(IDAlbum[0][0])
+                #Se selecciona busca el ID del tipo ingresado
+                cur.execute( "SELECT mediatype.mediatypeid FROM mediatype WHERE mediatype.name=%s",(tipo,))
+                IDMediaType=cur.fetchall()
+                IDMediaTypeOficial=(IDMediaType[0][0])
+                #Se selecciona busca el ID del genero ingresado
+                cur.execute( "SELECT genre.genreid FROM genre WHERE genre.name=%s",(genero,))
+                IDGenre=cur.fetchall()
+                IDGenreOficial=(IDGenre[0][0])
+                #Se agrega a la DB
+                cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio,))
+                conexion.commit()
+                cur.execute("SELECT * FROM track LIMIT 10 ORDER BY track.trackid DESC")
+                # Recorremos los resultados y los mostramos
+                for a,b,c,d,e,f,g,h,i in cur.fetchall() :
+                        print(a,b,c,d,e,f,g,h,i)
+
+                print("--------------------------------------------------")
+                addedSong=QMessageBox()
+                addedSong.setIcon(QMessageBox.Information)
+                addedSong.setWindowTitle("Listo")
+                addedSong.setText("Cancion agregada")
+                addedSong.exec()
+                cur.execute("SELECT * FROM track")
+                """canciones=cur.fetchall()
+                n=1
+                for i in canciones:
+                        print (i[0])
+                        cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (n, True, i[0],))
+                        n+=1"""
+                        
+
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":
