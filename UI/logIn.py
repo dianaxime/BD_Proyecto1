@@ -19,7 +19,10 @@ from config import config
 
 
 class Ui_SignInWidget(object):
+    #print("estoy aqui primer")
     def setupUi(self, SignInWidget):
+        #print("estoy aqui segundo")
+        self.SignInWidget=SignInWidget
         SignInWidget.setObjectName("SignInWidget")
         SignInWidget.resize(322, 341)
         SignInWidget.setStyleSheet("background-color: rgb(85, 85, 255);\n"
@@ -72,6 +75,7 @@ class Ui_SignInWidget(object):
         #aqui en vez de openActions seria validate para validar la data ingresada
         self.logIn.clicked.connect(self.openActions)
         self.retranslateUi(SignInWidget)
+        #self.openActions(SignInWidget)
         QtCore.QMetaObject.connectSlotsByName(SignInWidget)
 
     def retranslateUi(self, SignInWidget):
@@ -117,10 +121,11 @@ class Ui_SignInWidget(object):
                     invalid.exec()
                 else:
                     if contrasenaUsuario[0][0] == password:
+                        #SignInWidget.hide()
                         self.window = QtWidgets.QWidget()
                         self.ui = Ui_bienvenidaLabel()
                         self.ui.setupUi(self.window)
-                        SignInWidget.hide()
+                        #SignInWidget.hide()
                         self.window.show()
                     else: 
                         invalid=QMessageBox()

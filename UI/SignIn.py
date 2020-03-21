@@ -13,6 +13,7 @@ from logIn import *
 
 class Ui_LogIn(object):
     def setupUi(self, LogIn):
+        self.LogIn=LogIn
         LogIn.setObjectName("LogIn")
         LogIn.resize(261, 353)
         LogIn.setStyleSheet("background-color: rgb(85, 85, 255);\n"
@@ -94,8 +95,9 @@ class Ui_LogIn(object):
         self.sigInButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.sigInButton.setObjectName("sigInButton")
-
+        self.sigInButton.clicked.connect(self.validateInfo)
         self.retranslateUi(LogIn)
+        #self.validateInfo(LogIn)
         QtCore.QMetaObject.connectSlotsByName(LogIn)
 
     def retranslateUi(self, LogIn):
@@ -129,32 +131,42 @@ class Ui_LogIn(object):
 
             # Se obtienen los resultados
             db_version = cur.fetchone()
-            user=self.userInput.text()
-            password=self.passwordInput.text()
+            nombre=self.nombreInput.text()
+            apellido=self.apellidoInput.text()
+            email=self.emailInput.text()
+            contrasena=self.passwordInput.text()
+            """user=self.userInput.text()
+            password=self.passwordInput.text()"""
 
-            if user != '' and password != '':
-                cur.execute("SELECT contraseña FROM permisos_usuario JOIN customer ON customer.customerid=permisos_usuario.customerid  WHERE customer.email=%s",(user,))
-                contrasenaUsuario=cur.fetchall()
-                print(password)
-                if (len(contrasenaUsuario)==0):
-                    invalid=QMessageBox()
-                    invalid.setIcon(QMessageBox.Information)
-                    invalid.setWindowTitle("INVALIDO")
-                    invalid.setText("Correo no registrado")
-                    invalid.exec()
+            if (nombre != '' and apellido != '' and email != '' and contrasena != '') :
+                cur.execute( "SELECT firstname FROM customer WHERE customer.email=%s",(email,) )
+                correo_existente=cur.fetchall()
+                if (len(correo_existente)!=0):
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Ese correo ya esta registrado")
+                    blank.exec()
                 else:
-                    if contrasenaUsuario[0][0] == password:
-                        self.window = QtWidgets.QWidget()
-                        self.ui = Ui_SignInWidget()
-                        self.ui.setupUi(self.window)
-                        LoginIn.hide()
-                        self.window.show()
-                    else: 
-                        invalid=QMessageBox()
-                        invalid.setIcon(QMessageBox.Information)
-                        invalid.setWindowTitle("INVALIDO")
-                        invalid.setText("Contraseña incorrectos")
-                        invalid.exec()
+                    cur.execute( "SELECT MAX(customer.customerid) FROM customer" )
+                    IDUsuario=cur.fetchall()
+                    IDoficial=(IDUsuario[0][0])
+                    IDoficial += 1
+                    print(IDoficial)
+                    cur.execute("INSERT INTO customer (customerid, firstname, lastname, email)VALUES (%s, %s,%s, %s)", (IDoficial, nombre, apellido, email,))
+                    cur.execute("INSERT INTO permisos_usuario (permisoid, contraseña, customerid, puede_registrar, puede_inactivar, puede_eliminar,puede_modificar)VALUES (%s, %s,%s, %s,%s,%s, %s)", (IDoficial, contrasena, IDoficial,False, False,False,False,))
+                    conexion.commit()
+                    """self.window = QtWidgets.QWidget()
+                    self.ui = Ui_SignInWidget()
+                    self.ui.setupUi(self.window)
+                    #LogIn.hide()
+                    self.window.show()"""
+                    #LogIn.hide()
+                    self.window = QtWidgets.QWidget()
+                    self.ui = Ui_SignInWidget()
+                    self.ui.setupUi(self.window)
+                    #LogIn.hide()
+                    self.window.show()
             else:
                 blank=QMessageBox()
                 blank.setIcon(QMessageBox.Information)

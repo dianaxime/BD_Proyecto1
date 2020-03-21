@@ -123,7 +123,7 @@ def conectar():
         cur.execute("INSERT INTO permisos_usuario (permisoid, contraseña, customerid, puede_registrar, puede_inactivar, puede_eliminar,puede_modificar)VALUES (%s, %s,%s, %s,%s,%s, %s)", (IDoficial, contrasena, IDoficial,False, False,False,False,))
         cur.execute("SELECT * FROM permisos_usuario")
 
-        conexion.commit()
+        #conexion.commit()
 
         # Recorremos los resultados y los mostramos
         for a,b,c,d,e,f,g in cur.fetchall() :
