@@ -185,34 +185,44 @@ class Ui_IngresarCancion(object):
                 #Se selecciona busca el ID del album ingresado
                 cur.execute( "SELECT album.albumid FROM album WHERE album.title=%s",(album,))
                 IDAlbum=cur.fetchall()
-                IDAlbumOficial=(IDAlbum[0][0])
-                print(IDAlbum)
-                #Se selecciona busca el ID del tipo ingresado
                 cur.execute( "SELECT mediatype.mediatypeid FROM mediatype WHERE mediatype.name=%s",(tipo,))
                 IDMediaType=cur.fetchall()
-                print(IDMediaType)
-                IDMediaTypeOficial=(IDMediaType[0][0])
-                #Se selecciona busca el ID del genero ingresado
                 cur.execute( "SELECT genre.genreid FROM genre WHERE genre.name=%s",(genero,))
                 IDGenre=cur.fetchall()
-                print("este es genero")
-                IDGenreOficial=(IDGenre[0][0])
-                #Se agrega a la DB
-                cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio,))
-                cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
-                conexion.commit()
-                cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
-                # Recorremos los resultados y los mostramos
-                for a,b,c,d,e,f,g,h,i in cur.fetchall() :
-                        print(a,b,c,d,e,f,g,h,i)
+                if (len(IDAlbum)==0 or len(IDMediaType)==0 or len(IDGenre)==0):
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Alguno de los campos de género, album o tipo de media no es válido")
+                    blank.exec()
+                else:
+                    IDAlbumOficial=(IDAlbum[0][0])
+                    print(IDAlbum)
+                    #Se selecciona busca el ID del tipo ingresado
+                    
+                    
+                    print(IDMediaType)
+                    IDMediaTypeOficial=(IDMediaType[0][0])
+                    #Se selecciona busca el ID del genero ingresado
+                    
+                    
+                    IDGenreOficial=(IDGenre[0][0])
+                    #Se agrega a la DB
+                    cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio,))
+                    cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
+                    conexion.commit()
+                    cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
+                    # Recorremos los resultados y los mostramos
+                    for a,b,c,d,e,f,g,h,i in cur.fetchall() :
+                            print(a,b,c,d,e,f,g,h,i)
 
-                print("--------------------------------------------------")
-                addedSong=QMessageBox()
-                addedSong.setIcon(QMessageBox.Information)
-                addedSong.setWindowTitle("Listo")
-                addedSong.setText("Cancion agregada")
-                addedSong.exec()
-                cur.execute("SELECT * FROM track")
+                    print("--------------------------------------------------")
+                    addedSong=QMessageBox()
+                    addedSong.setIcon(QMessageBox.Information)
+                    addedSong.setWindowTitle("Listo")
+                    addedSong.setText("Cancion agregada")
+                    addedSong.exec()
+                    cur.execute("SELECT * FROM track")
                 """canciones=cur.fetchall()
                 n=1
                 for i in canciones:
