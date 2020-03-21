@@ -356,6 +356,7 @@ def conectar():
 
 
 
+
         # Cerremos el cursor
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
