@@ -9,8 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
-
-
+from logIn import *
 
 class Ui_LogIn(object):
     def setupUi(self, LogIn):
@@ -109,6 +108,67 @@ class Ui_LogIn(object):
         self.userLabel.setText(_translate("LogIn", "Usuario:"))
         self.passwordLabel.setText(_translate("LogIn", "Contraseña:"))
         self.sigInButton.setText(_translate("LogIn", "Sign In"))
+
+    def validateInfo(self):
+        #Aqui iria verificar el user y password en BD
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            user=self.userInput.text()
+            password=self.passwordInput.text()
+
+            if user != '' and password != '':
+                cur.execute("SELECT contraseña FROM permisos_usuario JOIN customer ON customer.customerid=permisos_usuario.customerid  WHERE customer.email=%s",(user,))
+                contrasenaUsuario=cur.fetchall()
+                print(password)
+                if (len(contrasenaUsuario)==0):
+                    invalid=QMessageBox()
+                    invalid.setIcon(QMessageBox.Information)
+                    invalid.setWindowTitle("INVALIDO")
+                    invalid.setText("Correo no registrado")
+                    invalid.exec()
+                else:
+                    if contrasenaUsuario[0][0] == password:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_SignInWidget()
+                        self.ui.setupUi(self.window)
+                        LoginIn.hide()
+                        self.window.show()
+                    else: 
+                        invalid=QMessageBox()
+                        invalid.setIcon(QMessageBox.Information)
+                        invalid.setWindowTitle("INVALIDO")
+                        invalid.setText("Contraseña incorrectos")
+                        invalid.exec()
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+
+
 
 
 if __name__ == "__main__":

@@ -113,14 +113,17 @@ def conectar():
         print(IDoficial)
         cur.execute("INSERT INTO customer (customerid, firstname, lastname, email)VALUES (%s, %s,%s, %s)", (IDoficial, firstName, lastName, email,))
         cur.execute("SELECT customerid,firstname, lastname,email FROM customer")
+        #conexion.commit()
 
         # Recorremos los resultados y los mostramos
         for a,b,c,d in cur.fetchall() :
             print(a,b,c,d)
 
         print("--------------------------------------------------")
-        cur.execute("INSERT INTO permisos_usuario (permisoid, contraseña, customerid, puede_registrar, puede_inactivar, puede_eliminar,puede_modificar)VALUES (%s, %s,%s, %s,%s,%s, %s)", (IDoficial, contrasena, IDoficial,True, True,True,True,))
+        cur.execute("INSERT INTO permisos_usuario (permisoid, contraseña, customerid, puede_registrar, puede_inactivar, puede_eliminar,puede_modificar)VALUES (%s, %s,%s, %s,%s,%s, %s)", (IDoficial, contrasena, IDoficial,False, False,False,False,))
         cur.execute("SELECT * FROM permisos_usuario")
+
+        conexion.commit()
 
         # Recorremos los resultados y los mostramos
         for a,b,c,d,e,f,g in cur.fetchall() :
@@ -129,7 +132,7 @@ def conectar():
         print("--------------------------------------------------")
 
         ##crear admin
-        firstName="Juan Carlos"
+        """firstName="Juan Carlos"
         lastName="Vásquez"
         email="juancvs@gmail.com"
         contrasena="soyJuanCarlos123"
@@ -153,7 +156,7 @@ def conectar():
         for a,b,c in cur.fetchall() :
             print(a,b,c)
 
-        print("--------------------------------------------------")
+        print("--------------------------------------------------")"""
 
         ##verificar contrasena de admin
         correoIngresado="juancvs@gmail.com"
@@ -169,6 +172,7 @@ def conectar():
             else:
                 print("contraseña incorrecta de admin")
 
+
         ##verificar contrasena de usuario
         correoIngresado="juan.diego.vf@gmail.com"
         contrasenaIngresada="soyJuanDiego123"
@@ -182,6 +186,11 @@ def conectar():
                 print ("Acceso concebido")
             else:
                 print("contraseña incorrecta")
+
+        """cur.execute("DELETE FROM permisos_usuario WHERE permisos_usuario.contraseña = 'soyJuanDiego123'")
+        conexion.commit()
+        cur.execute("DELETE FROM customer WHERE customer.firstname = 'Juan Diego'",(IDoficial,))
+        conexion.commit()"""
 
         # Cerremos el cursor
         cur.close()
