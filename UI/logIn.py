@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QMessageBox
-from Actions import Ui_bienvenidaLabel
+from Actions import *
 #from SignIn import Ui_LogIn
 from SignIn import *
 import psycopg2

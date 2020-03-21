@@ -15,7 +15,7 @@ from ingresarArtista import Ui_IngresarArtista
 from ingresarCancion import Ui_IngresarCancion
 from buscarAlbum import Ui_BuscarAlbum
 from buscarArtista import Ui_BuscarArtista
-from buscarCancion import Ui_BuscarCancion
+from buscarcancion import Ui_BuscarCancion
 from eliminarAlbum import Ui_EliminarAlbum
 from eliminarArtista import Ui_EliminarArtista
 from eliminarCancion import Ui_EliminarCancion
