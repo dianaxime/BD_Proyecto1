@@ -91,9 +91,11 @@ class Ui_EliminarCancion(object):
                 if(len(IDTrack)!=0):
                     #Si si existe se borra
                     IDoficial=(IDTrack[0][0])
+                    cur.execute("DELETE FROM creador_track WHERE creador_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid = %s",(IDoficial,))
+                    cur.execute("DELETE FROM creador_track WHERE creador_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM track WHERE track.trackid = %s",(IDoficial,))
                     conexion.commit()
                     cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")

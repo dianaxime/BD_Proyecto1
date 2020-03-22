@@ -23,18 +23,25 @@ def conectar():
         db_version = cur.fetchone()
         # Se muestra la versión por pantalla
         print(db_version)
+        cur.execute("SELECT * FROM creador_track ORDER BY creador_track.trackid ASC LIMIT 5")
+        # Recorremos los resultados y los mostramos
+        for a,b,c in cur.fetchall() :
+                print(a,b,c)
 
-        cur.execute("SELECT * FROM track")
-        canciones=cur.fetchall()
-        n=1
-        for i in canciones:
-        	print (i[0])
-        	cur.execute("INSERT INTO creador_track (relacionid, creadorid, trackid) VALUES (%s, %s, %s)", (n, n%50+1, i[0],))
-        	n+=1
-        	#print("este es id de actividad_track %s",(n))
-        	#cur.execute("INSERT INTO actividad_track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nameTrack, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, Composer, Milliseconds, Bytes, Unitprice,))
+        print("--------------------------------------------------")
+        print("Se borra...")
+        nombre="Balls to the Wall"
+        cur.execute("SELECT track.trackid FROM track WHERE track.name = '{0}'".format(nombre))
+        IDTrack=cur.fetchall()
+        IDoficial=(IDTrack[0][0])
+        cur.execute("DELETE FROM creador_track WHERE creador_track.trackid = %s",(IDoficial,))
+        cur.execute("SELECT * FROM creador_track ORDER BY creador_track.trackid ASC LIMIT 5")
+        # Recorremos los resultados y los mostramos
+        for a,b,c in cur.fetchall() :
+                print(a,b,c)
 
-        conexion.commit()
+        print("--------------------------------------------------")
+
 
 
 
