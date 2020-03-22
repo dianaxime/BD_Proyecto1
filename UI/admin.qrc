@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="cct">
+    <file>admin.png</file>
+  </qresource>
+</RCC>
