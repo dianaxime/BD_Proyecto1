@@ -71,6 +71,91 @@ class Ui_IngresarAlbum(object):
         self.ingresarButton.setText(_translate("Form", "Ingresar"))
         self.artistaLabel.setText(_translate("Form", "Artista:"))
 
+    def agregarAlbum(self):
+                conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            nombreAlbum=self.tituloInput.text()
+            nombreArtista=self.artistaInput.text()
+
+            if nombre != '':
+                #Se verifica si ya existe ese artista
+                cur.execute( "SELECT artist.artistid FROM artist WHERE artist.name=%s",(nombre,))
+                IDArtist=cur.fetchall()
+                if (len(IDArtist)==0):
+                    #Si no existe se crea su ID y se agrega
+                    cur.execute( "SELECT MAX(artist.artistid) FROM artist" )
+                    IDArtist=cur.fetchall()
+                    IDoficial=(IDArtist[0][0])
+                    IDoficial += 1
+                    cur.execute("INSERT INTO artist (artistid, name)VALUES (%s, %s)", ( IDoficial, nombre))
+                    conexion.commit()
+                    cur.execute("SELECT * FROM artist ORDER BY artist.artistid DESC LIMIT 10")
+                    # Recorremos los resultados y los mostramos
+                    for a,b in cur.fetchall() :
+                        print(a,b)
+                    print("--------------------------------------------------")
+                    addedArtist=QMessageBox()
+                    addedArtist.setIcon(QMessageBox.Information)
+                    addedArtist.setWindowTitle("Listo")
+                    addedArtist.setText("Artista agregado")
+                    addedArtist.exec()
+                else:
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Ese artista ya existe en la Base de Datos")
+                    blank.exec()
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conexion is not None:
+                conexion.close()
+
+        ##Lo de prueba
+        
+        cur.execute( "SELECT MAX(album.albumid) FROM album" )
+        idAlbum=cur.fetchall()
+        idAlbum=idAlbum[0][0]
+        idAlbum+=1
+        cur.execute( "SELECT artist.artistid FROM artist WHERE artist.name=%s",(nombreArtistAlbum,) )
+        IDArtistAlbum=cur.fetchall()
+        IDArtistAlbum=IDArtistAlbum[0][0]
+        postgres_insert_query="""INSERT INTO album (albumid, title, artistid) VALUES (%s,%s,%s)"""
+        record_to_insert=(idAlbum, nombreAlbum,IDArtistAlbum)
+        ##cur.execute(postgres_insert_query, record_to_insert)
+        cur.execute("INSERT INTO album (albumid, title, artistid) VALUES (%s,%s,%s)", (idAlbum, nombreAlbum,IDArtistAlbum))
+        #conexion.commit()
+        cur.execute("SELECT * FROM album")
+        # Recorremos los resultados y los mostramos
+        for a,b,c in cur.fetchall() :
+            print(a,b,c)
+
+        print("--------------------------------------------------")
+
 
 if __name__ == "__main__":
     import sys
