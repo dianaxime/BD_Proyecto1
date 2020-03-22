@@ -104,7 +104,7 @@ class Ui_IngresarArtista(object):
                     addedArtist=QMessageBox()
                     addedArtist.setIcon(QMessageBox.Information)
                     addedArtist.setWindowTitle("Listo")
-                    addedArtist.setText("Artista agregado")
+                    addedArtist.setText("Artista agregado exitosamente")
                     addedArtist.exec()
                 else:
                     blank=QMessageBox()

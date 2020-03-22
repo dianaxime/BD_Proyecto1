@@ -25,8 +25,19 @@ def conectar():
         db_version = cur.fetchone()
         # Se muestra la versión por pantalla
         print(db_version)
+        titulo="Back to Black"
+        aName="Amy Winehouse"
+        cur.execute( "SELECT * FROM album WHERE album.title=%s AND album.artistid IN (SELECT artist.artistid FROM artist WHERE artist.name = %s)",(titulo, aName,))
+        for a,b,c in cur.fetchall() :
+            print(a,b,c)
 
-        print("Artista")
+        print("--------------------------------------------------")
+        cur.execute( "SELECT * FROM artist WHERE artist.name = %s",(aName,))
+        for a,b in cur.fetchall() :
+            print(a,b)
+
+        print("--------------------------------------------------")
+        """print("Artista")
         cur.execute("SELECT * FROM artist LIMIT 10")
         # Recorremos los resultados y los mostramos
         for a,b in cur.fetchall() :
@@ -83,7 +94,7 @@ def conectar():
         # Recorremos los resultados y los mostramos
         for a,b in cur.fetchall() :
             print(a,b)
-        print("--------------------------------------------------")
+        print("--------------------------------------------------")"""
 
 
         cur.close()
