@@ -98,6 +98,7 @@ class Ui_ModificarAlbum(object):
         self.tituloLabel.setText(_translate("Form", "Título:"))
         self.albumLabel.setText(_translate("Form", "Artista:"))
 
+
     def modificarAlbum(self):
         conexion=None
         try:
@@ -124,8 +125,6 @@ class Ui_ModificarAlbum(object):
                 blank.exec()
             else:
                 newArtistid=newArtistid [0][0]
-                #print(newArtistid)
-                #nombreNewAlb="11 pm"
                 cur.execute('''
                         UPDATE album
                         SET title = %s,
@@ -134,6 +133,12 @@ class Ui_ModificarAlbum(object):
                         ''',(nombre, newArtistid, id))
                 conexion.commit()
                 print("Lo edito")
+                addedArtist=QMessageBox()
+                addedArtist.setIcon(QMessageBox.Information)
+                addedArtist.setWindowTitle("Listo")
+                addedArtist.setText("Album modificado exitosamente")
+                addedArtist.exec()
+
             
             
 

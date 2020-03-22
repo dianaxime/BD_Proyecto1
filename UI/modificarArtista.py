@@ -110,6 +110,11 @@ class Ui_ModificarArtista(object):
                 WHERE artistid = %s
                 ''',(nombre, id))
             conexion.commit()
+            addedArtist=QMessageBox()
+            addedArtist.setIcon(QMessageBox.Information)
+            addedArtist.setWindowTitle("Listo")
+            addedArtist.setText("Artista modificado exitosamente")
+            addedArtist.exec()
             
             
 

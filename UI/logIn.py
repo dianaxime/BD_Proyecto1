@@ -115,6 +115,8 @@ class Ui_SignInWidget(object):
                 cur.execute("SELECT contraseña FROM permisos_usuario JOIN customer ON customer.customerid=permisos_usuario.customerid  WHERE customer.email=%s",(user,))
                 contrasenaUsuario=cur.fetchall()
                 print(password)
+                cur.execute("SELECT permisos_usuario.permisoid FROM permisos_usuario JOIN customer ON customer.customerid=permisos_usuario.customerid  WHERE customer.email=%s",(user,))
+                idUsuario=cur.fetchall()
                 if (len(contrasenaUsuario)==0):
                     invalid=QMessageBox()
                     invalid.setIcon(QMessageBox.Information)
@@ -125,7 +127,8 @@ class Ui_SignInWidget(object):
                     if contrasenaUsuario[0][0] == password:
                         #SignInWidget.hide()
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_bienvenidaLabel()
+                        self.id=idUsuario[0][0]
+                        self.ui = Ui_bienvenidaLabel(self.id)
                         self.ui.setupUi(self.window)
                         #SignInWidget.hide()
                         self.window.show()

@@ -267,6 +267,11 @@ class Ui_ModificarCancion(object):
                     WHERE trackid = %s
                     ''',(nombre, newAlbumtid, newTipoid,newGeneroid,compositor,duracion,tamano, precio,id))
                 conexion.commit()
+                addedArtist=QMessageBox()
+                addedArtist.setIcon(QMessageBox.Information)
+                addedArtist.setWindowTitle("Listo")
+                addedArtist.setText("Canción modificada exitosamente")
+                addedArtist.exec()
                 print("Lo edito")
             
             

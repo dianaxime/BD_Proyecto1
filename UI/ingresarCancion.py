@@ -15,6 +15,9 @@ from config import config
 
 
 class Ui_IngresarCancion(object):
+    def __init__(self,id):
+        self.id=id
+        print("este es el id del registrador "+str(id))
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(353, 498)
@@ -163,7 +166,7 @@ class Ui_IngresarCancion(object):
             # Ejecución la consulta para obtener la conexión
             print('La version de PostgreSQL es la:')
             cur.execute('SELECT version()')
-
+            idRegistrador=self.id
             # Se obtienen los resultados
             db_version = cur.fetchone()
             nombre=self.nombreInput.text()
@@ -182,6 +185,10 @@ class Ui_IngresarCancion(object):
                 IDoficial=(IDTrack[0][0])
                 IDoficial += 1
                 print(IDoficial)
+                cur.execute( "SELECT MAX(creador_track.relacionid) FROM creador_track" )
+                IDrelacion=cur.fetchall()
+                IDoficialRel=(IDrelacion[0][0])
+                IDoficialRel += 1
                 #Se selecciona busca el ID del album ingresado
                 cur.execute( "SELECT album.albumid FROM album WHERE album.title=%s",(album,))
                 IDAlbum=cur.fetchall()
@@ -189,11 +196,23 @@ class Ui_IngresarCancion(object):
                 IDMediaType=cur.fetchall()
                 cur.execute( "SELECT genre.genreid FROM genre WHERE genre.name=%s",(genero,))
                 IDGenre=cur.fetchall()
-                if (len(IDAlbum)==0 or len(IDMediaType)==0 or len(IDGenre)==0):
+                if (len(IDAlbum)==0):
                     blank=QMessageBox()
                     blank.setIcon(QMessageBox.Information)
                     blank.setWindowTitle("ERROR")
-                    blank.setText("Alguno de los campos de género, album o tipo de media no es válido")
+                    blank.setText("El campo de album no es válido")
+                    blank.exec()
+                elif (len(IDMediaType)==0):
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("El campo de tipo de media no es válido")
+                    blank.exec()
+                elif (len(IDGenre)==0):
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("El campo de género no es válido")
                     blank.exec()
                 else:
                     IDAlbumOficial=(IDAlbum[0][0])
@@ -210,6 +229,7 @@ class Ui_IngresarCancion(object):
                     #Se agrega a la DB
                     cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio,))
                     cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
+                    cur.execute("INSERT INTO creador_track (relacionid, creadorid, trackid) VALUES (%s, %s, %s)", (IDoficialRel, idRegistrador, IDoficial,))
                     conexion.commit()
                     cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
                     # Recorremos los resultados y los mostramos

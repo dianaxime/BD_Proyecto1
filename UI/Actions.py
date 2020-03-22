@@ -20,9 +20,14 @@ from eliminarAlbum import Ui_EliminarAlbum
 from eliminarArtista import Ui_EliminarArtista
 from eliminarCancion import Ui_EliminarCancion
 from inactivarCancion import Ui_InactivarCancion
+import psycopg2
+from config import config
 
 
 class Ui_bienvenidaLabel(object):
+    def __init__(self,id):
+        self.id=id
+        #print("este es el id del usuario "+str(id))
     def setupUi(self, bienvenidaLabel):
         bienvenidaLabel.setObjectName("bienvenidaLabel")
         bienvenidaLabel.resize(464, 425)
@@ -143,101 +148,202 @@ class Ui_bienvenidaLabel(object):
         self.artistaEliminar.setText(_translate("bienvenidaLabel", "Artista"))
     
     def openRegistrar(self):
-        #Se verifica cual esta seleccionado
-        if self.cancionRegistrar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_IngresarCancion()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        elif self.artistaRegistrar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_IngresarArtista()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        elif self.albumRegistrar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_IngresarAlbum()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        else:
-            blank=QMessageBox()
-            blank.setIcon(QMessageBox.Information)
-            blank.setWindowTitle("INCOMPLETO")
-            blank.setText("Por favor selecciona una opcion de registro")
-            blank.exec()
+        conexion=None
+        try:
+            params = config()
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            id=self.id
+        #print(id)
+            cur.execute("SELECT permisos_usuario.puede_registrar FROM permisos_usuario WHERE permisos_usuario.permisoid=%s",(id,))
+            permisoRegistrar=cur.fetchall()[0][0]
+            #print(permisoRegistrar)
+            if permisoRegistrar:
+                if self.cancionRegistrar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_IngresarCancion(self.id)
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                elif self.artistaRegistrar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_IngresarArtista()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                elif self.albumRegistrar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_IngresarAlbum()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                else:
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("INCOMPLETO")
+                    blank.setText("Por favor selecciona una opcion de registro")
+                    blank.exec()
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("ERROR")
+                blank.setText("Usted no tiene permiso de registrar")
+                blank.exec()
+
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
     
     def openModificar(self):
         #Se verifica cual esta seleccionado
-        if self.cancionModificar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_BuscarCancion()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        elif self.artistaModificar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_BuscarArtista()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        elif self.albumModificar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_BuscarAlbum()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        else:
-            blank=QMessageBox()
-            blank.setIcon(QMessageBox.Information)
-            blank.setWindowTitle("INCOMPLETO")
-            blank.setText("Por favor selecciona una opcion de modificacion")
-            blank.exec()
+        conexion=None
+        try:
+            params = config()
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            id=self.id
+            #print(id)
+            cur.execute("SELECT permisos_usuario.puede_modificar FROM permisos_usuario WHERE permisos_usuario.permisoid=%s",(id,))
+            permisoModificar=cur.fetchall()[0][0]
+            #print(permisoRegistrar)
+            if permisoModificar:
+                if self.cancionModificar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_BuscarCancion()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                elif self.artistaModificar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_BuscarArtista()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                elif self.albumModificar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_BuscarAlbum()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                else:
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("INCOMPLETO")
+                    blank.setText("Por favor selecciona una opcion de modificacion")
+                    blank.exec()
+                
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("ERROR")
+                blank.setText("Usted no tiene permiso para modificar")
+                blank.exec()
+
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
     
     def openEliminar(self):
-        #Se verifica cual esta seleccionado
-        if self.cancionEliminar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_EliminarCancion()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        elif self.artistaEliminar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_EliminarArtista()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        elif self.albumEliminar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_EliminarAlbum()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        else:
-            blank=QMessageBox()
-            blank.setIcon(QMessageBox.Information)
-            blank.setWindowTitle("INCOMPLETO")
-            blank.setText("Por favor selecciona una opcion de eliminar")
-            blank.exec()
+        conexion=None
+        try:
+            params = config()
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            id=self.id
+            #print(id)
+            cur.execute("SELECT permisos_usuario.puede_eliminar FROM permisos_usuario WHERE permisos_usuario.permisoid=%s",(id,))
+            permisoEliminar=cur.fetchall()[0][0]
+            #print(permisoRegistrar)
+            if permisoEliminar:
+                if self.cancionEliminar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_EliminarCancion()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                elif self.artistaEliminar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_EliminarArtista()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                elif self.albumEliminar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_EliminarAlbum()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                else:
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("INCOMPLETO")
+                    blank.setText("Por favor selecciona una opcion de eliminar")
+                    blank.exec()
+                
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("ERROR")
+                blank.setText("Usted no tiene permiso para eliminar")
+                blank.exec()
+
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+        
 
     def openInactivar(self):
-        #Se verifica si esta seleccionado
-        if self.cancionInactivar.isChecked() == True:
-                self.window = QtWidgets.QWidget()
-                self.ui = Ui_InactivarCancion()
-                self.ui.setupUi(self.window)
-                bienvenidaLabel.hide()
-                self.window.show()
-        else:
-            blank=QMessageBox()
-            blank.setIcon(QMessageBox.Information)
-            blank.setWindowTitle("INCOMPLETO")
-            blank.setText("Por favor selecciona una opcion de inactivar")
-            blank.exec()
+        conexion=None
+        try:
+            params = config()
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            id=self.id
+            #print(id)
+            cur.execute("SELECT permisos_usuario.puede_inactivar FROM permisos_usuario WHERE permisos_usuario.permisoid=%s",(id,))
+            permisoInactivar=cur.fetchall()[0][0]
+            #print(permisoRegistrar)
+            if permisoInactivar:
+                #Se verifica si esta seleccionado
+                if self.cancionInactivar.isChecked() == True:
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_InactivarCancion()
+                        self.ui.setupUi(self.window)
+                        #bienvenidaLabel.hide()
+                        self.window.show()
+                else:
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("INCOMPLETO")
+                    blank.setText("Por favor selecciona una opcion de inactivar")
+                    blank.exec()
+                
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("ERROR")
+                blank.setText("Usted no tiene permiso para inactivar")
+                blank.exec()
 
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 if __name__ == "__main__":
     import sys
