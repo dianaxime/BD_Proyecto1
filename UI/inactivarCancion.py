@@ -9,6 +9,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
+import psycopg2
+from config import config
 
 
 class Ui_InactivarCancion(object):
@@ -48,6 +51,7 @@ class Ui_InactivarCancion(object):
         font.setPointSize(10)
         self.nombreLabel.setFont(font)
         self.nombreLabel.setObjectName("nombreLabel")
+        self.continuarButton.clicked.connect(self.inactivarTrack)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -58,6 +62,83 @@ class Ui_InactivarCancion(object):
         self.buscarLabel.setText(_translate("Form", "Ingrese canción a inactivar:"))
         self.continuarButton.setText(_translate("Form", "Inactivar"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
+
+    def inactivarTrack(self):
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            nombre=self.nombreInput.text()
+
+            if nombre != '':
+                #Se verifica que exista ese track
+                cur.execute("SELECT actividad_track.trackid FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.name = %s)",(nombre,))
+                IDTrack=cur.fetchall()
+                if(len(IDTrack)!=0):
+                    #Si si existe se obtine el ID y adquiere su estado
+                    IDoficial=(IDTrack[0][0])
+                    cur.execute("SELECT actividad_track.esta_activo FROM actividad_track WHERE actividad_track.trackid = %s",(IDoficial,))
+                    estado=cur.fetchall()
+                    actualState=(estado[0][0])
+                    if(actualState==True):
+                        #Si esta activada se desactiva el track
+                        cur.execute("UPDATE actividad_track SET esta_activo = False WHERE actividadid = %s",(IDoficial,))
+                        conexion.commit()
+                        cur.execute("SELECT * FROM actividad_track ORDER BY actividad_track.trackid ASC LIMIT 10")
+                        for a,b,c in cur.fetchall() :
+                            print(a,b,c)
+                        print("--------------------------------------------------")
+                        actSong=QMessageBox()
+                        actSong.setIcon(QMessageBox.Information)
+                        actSong.setWindowTitle("Listo")
+                        actSong.setText("Track desactivada")
+                        actSong.exec()
+                    else:
+                        #Si esta desactivda se activa el track
+                        newState = True
+                        cur.execute("UPDATE actividad_track SET esta_activo = True WHERE actividadid = %s",(IDoficial,))
+                        conexion.commit()
+                        cur.execute("SELECT * FROM actividad_track ORDER BY actividad_track.trackid ASC LIMIT 10")
+                        for a,b,c in cur.fetchall() :
+                            print(a,b,c)
+                        print("--------------------------------------------------")
+                        actSong=QMessageBox()
+                        actSong.setIcon(QMessageBox.Information)
+                        actSong.setWindowTitle("Listo")
+                        actSong.setText("Track activada")
+                        actSong.exec()
+                else:
+                    #Sino existe se muestra error
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Ese track no existe en la base de datos")
+                    blank.exec()                      
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor ingresa el nombre del track a desactivar/Activar")
+                blank.exec()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":

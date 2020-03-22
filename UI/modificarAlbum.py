@@ -9,10 +9,34 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
-
+import psycopg2
+from config import config
+from PyQt5.QtWidgets import QMessageBox
 
 class Ui_ModificarAlbum(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
+        conexion=None
+        try:
+            params = config()
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            print(self.id)
+            cur.execute( "SELECT album.title FROM album WHERE album.albumid=%s",(self.id,))
+            nombre=cur.fetchall()[0][0]
+            cur.execute( "SELECT artist.name FROM artist JOIN album ON album.artistid=artist.artistid WHERE album.albumid=%s",(self.id,))
+            artista=cur.fetchall()[0][0]
+            print(nombre)
+            print(artista)
+            
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
         Form.setObjectName("Form")
         Form.resize(333, 260)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
@@ -28,6 +52,7 @@ class Ui_ModificarAlbum(object):
         self.modificarAlbumLabel.setFont(font)
         self.modificarAlbumLabel.setObjectName("modificarAlbumLabel")
         self.tituloInput = QtWidgets.QLineEdit(Form)
+        self.tituloInput.setText(nombre)
         self.tituloInput.setGeometry(QtCore.QRect(130, 90, 161, 20))
         self.tituloInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
@@ -42,6 +67,7 @@ class Ui_ModificarAlbum(object):
         self.modificarButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.modificarButton.setObjectName("modificarButton")
+        self.modificarButton.clicked.connect(self.modificarAlbum)
         self.tituloLabel = QtWidgets.QLabel(Form)
         self.tituloLabel.setGeometry(QtCore.QRect(40, 90, 51, 16))
         font = QtGui.QFont()
@@ -55,6 +81,7 @@ class Ui_ModificarAlbum(object):
         self.albumLabel.setFont(font)
         self.albumLabel.setObjectName("albumLabel")
         self.artistaInput = QtWidgets.QLineEdit(Form)
+        self.artistaInput.setText(artista)
         self.artistaInput.setGeometry(QtCore.QRect(130, 140, 161, 20))
         self.artistaInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
@@ -70,6 +97,51 @@ class Ui_ModificarAlbum(object):
         self.modificarButton.setText(_translate("Form", "Modificar"))
         self.tituloLabel.setText(_translate("Form", "Título:"))
         self.albumLabel.setText(_translate("Form", "Artista:"))
+
+    def modificarAlbum(self):
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            # Se obtienen los resultados
+            #db_version = cur.fetchone()
+            nombre=self.tituloInput.text()
+            id=self.id
+            artista=self.artistaInput.text()
+            cur.execute( "SELECT artist.artistid FROM artist WHERE artist.name=%s",(artista,))
+            newArtistid=cur.fetchall()
+            if (len(newArtistid)==0):
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("ERROR")
+                blank.setText("El artista seleccionado no esta registrado.")
+                blank.exec()
+            else:
+                newArtistid=newArtistid [0][0]
+                #print(newArtistid)
+                #nombreNewAlb="11 pm"
+                cur.execute('''
+                        UPDATE album
+                        SET title = %s,
+                            artistid=%s
+                        WHERE albumid = %s
+                        ''',(nombre, newArtistid, id))
+                conexion.commit()
+                print("Lo edito")
+            
+            
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":

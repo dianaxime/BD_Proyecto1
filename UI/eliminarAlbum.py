@@ -9,6 +9,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
+import psycopg2
+from config import config
 
 
 class Ui_EliminarAlbum(object):
@@ -48,6 +51,7 @@ class Ui_EliminarAlbum(object):
         self.eliminarButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.eliminarButton.setObjectName("eliminarButton")
+        self.eliminarButton.clicked.connect(self.eliminarAlbum)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -58,6 +62,69 @@ class Ui_EliminarAlbum(object):
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
         self.eliminarCancionLabel.setText(_translate("Form", "Eliminar Álbum"))
         self.eliminarButton.setText(_translate("Form", "Eliminar"))
+
+    def eliminarAlbum(self):
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            nombre=self.nombreInput.text()
+
+            if nombre != '':
+                #Se verifica que exista ese album
+                cur.execute("SELECT album.albumid FROM album WHERE album.title = '{0}'".format(nombre))
+                IDAlbum=cur.fetchall()
+                if(len(IDAlbum)!=0):
+                    #Si si existe se obtine el ID y se borra 
+                    IDoficial=(IDAlbum[0][0])
+                    cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
+                    cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
+                    cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
+                    cur.execute("DELETE FROM track WHERE track.albumid = %s",(IDoficial,))
+                    cur.execute("DELETE FROM album WHERE album.title = '{0}'".format(nombre))
+                    conexion.commit()
+                    cur.execute("SELECT * FROM album ORDER BY album.albumid ASC LIMIT 10")
+                    # Recorremos los resultados y los mostramos
+                    for a,b,c in cur.fetchall() :
+                            print(a,b,c)
+                    print("--------------------------------------------------")
+                    addedSong=QMessageBox()
+                    addedSong.setIcon(QMessageBox.Information)
+                    addedSong.setWindowTitle("Listo")
+                    addedSong.setText("Album eliminado exitosamente")
+                    addedSong.exec()
+                else:
+                    #Sino existe se muestra error
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Ese album no existe en la base de datos")
+                    blank.exec()                      
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor ingresa el nombre del album a borrar")
+                blank.exec()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":
