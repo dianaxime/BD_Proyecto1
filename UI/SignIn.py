@@ -95,7 +95,7 @@ class Ui_LogIn(object):
         self.sigInButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.sigInButton.setObjectName("sigInButton")
-        self.sigInButton.clicked.connect(self.validateInfo)
+        #self.sigInButton.clicked.connect(self.validateInfo)
         self.retranslateUi(LogIn)
         #self.validateInfo(LogIn)
         QtCore.QMetaObject.connectSlotsByName(LogIn)
@@ -110,8 +110,9 @@ class Ui_LogIn(object):
         self.userLabel.setText(_translate("LogIn", "Usuario:"))
         self.passwordLabel.setText(_translate("LogIn", "Contraseña:"))
         self.sigInButton.setText(_translate("LogIn", "Sign In"))
+        self.sigInButton.clicked.connect(lambda:self.validateInfo(LogIn))
 
-    def validateInfo(self):
+    def validateInfo(self, LogIn):
         #Aqui iria verificar el user y password en BD
         conexion=None
         try:
@@ -162,11 +163,11 @@ class Ui_LogIn(object):
                     #LogIn.hide()
                     self.window.show()"""
                     #LogIn.hide()
-                    self.window = QtWidgets.QWidget()
+                    """self.window = QtWidgets.QWidget()
                     self.ui = Ui_SignInWidget()
-                    self.ui.setupUi(self.window)
-                    #LogIn.hide()
-                    self.window.show()
+                    self.ui.setupUi(self.window)"""
+                    LogIn.hide()
+                    #self.window.show()
             else:
                 blank=QMessageBox()
                 blank.setIcon(QMessageBox.Information)

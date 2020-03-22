@@ -61,7 +61,7 @@ class Ui_SignInWidget(object):
         self.signIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.signIn.setObjectName("signIn")
-        self.signIn.clicked.connect(self.openSignIn)
+        #
         self.logIn = QtWidgets.QPushButton(SignInWidget)
         self.logIn.setGeometry(QtCore.QRect(90, 180, 141, 41))
         font = QtGui.QFont()
@@ -85,8 +85,10 @@ class Ui_SignInWidget(object):
         self.passwordLabel.setText(_translate("SignInWidget", "Contraseña:"))
         self.signIn.setText(_translate("SignInWidget", "Sign In"))
         self.logIn.setText(_translate("SignInWidget", "Log In"))
+        self.signIn.clicked.connect(lambda:self.openSignIn(SignInWidget))
+        self.logIn.clicked.connect(lambda:self.openActions(SignInWidget))
 
-    def openActions(self):
+    def openActions(self, SignInWidget):
         #Aqui iria verificar el user y password en BD
         conexion=None
         try:
@@ -147,11 +149,11 @@ class Ui_SignInWidget(object):
                 conexion.close()
 
 
-    def openSignIn(self):
+    def openSignIn(self, SignInWidget):
         self.window = QtWidgets.QWidget()
         self.ui = Ui_LogIn()
         self.ui.setupUi(self.window)
-        SignInWidget.hide()
+        #SignInWidget.hide()
         self.window.show()
 
 
