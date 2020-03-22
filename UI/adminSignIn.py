@@ -9,6 +9,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from adminLogIn import *
+import psycopg2
+from config import config
 
 class Ui_adminSignIn(object):
     def setupUi(self, adminSignIn):
@@ -71,7 +74,7 @@ class Ui_adminSignIn(object):
         self.sigInButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.sigInButton.setObjectName("sigInButton")
-
+        self.sigInButton.clicked.connect(self.validateInfo)
         self.retranslateUi(adminSignIn)
         QtCore.QMetaObject.connectSlotsByName(adminSignIn)
 
@@ -83,6 +86,77 @@ class Ui_adminSignIn(object):
         self.emailLabel.setText(_translate("adminSignIn", "Email:"))
         self.passwordLabel.setText(_translate("adminSignIn", "Contraseña:"))
         self.sigInButton.setText(_translate("adminSignIn", "Sign In"))
+
+    def validateInfo(self):
+        #Aqui iria verificar el user y password en BD
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            nombre=self.nombreInput.text()
+            apellido=self.apellidoInput.text()
+            email=self.emailInput.text()
+            contrasena=self.passwordInput.text()
+            """user=self.userInput.text()
+            password=self.passwordInput.text()"""
+
+            if (nombre != '' and apellido != '' and email != '' and contrasena != '') :
+                cur.execute( "SELECT firstname FROM employee WHERE employee.email=%s",(email,) )
+                correo_existente=cur.fetchall()
+                if (len(correo_existente)!=0):
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Ese correo ya esta registrado como Administrador")
+                    blank.exec()
+                else:
+                    cur.execute( "SELECT MAX(employee.employeeid) FROM employee" )
+                    IDUsuario=cur.fetchall()
+                    IDoficial=(IDUsuario[0][0])
+                    IDoficial += 1
+                    print(IDoficial)
+                    cur.execute("INSERT INTO employee (employeeid, firstname, lastname, email)VALUES (%s, %s,%s, %s)", (IDoficial, nombre, apellido, email,))
+                    
+                    cur.execute("INSERT INTO permisos_admin (permisoid, contraseña, employeeid)VALUES (%s, %s,%s)", (IDoficial, contrasena, IDoficial,))
+                    print("estoy aqui")
+                    conexion.commit()
+                    """self.window = QtWidgets.QWidget()
+                    self.ui = Ui_SignInWidget()
+                    self.ui.setupUi(self.window)
+                    #LogIn.hide()
+                    self.window.show()"""
+                    #LogIn.hide()
+                    self.window = QtWidgets.QWidget()
+                    self.ui = Ui_adminLogIn()
+                    self.ui.setupUi(self.window)
+                    #LogIn.hide()
+                    self.window.show()
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":
