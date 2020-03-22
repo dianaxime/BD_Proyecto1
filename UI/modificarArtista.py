@@ -9,10 +9,38 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
-
+import psycopg2
+from config import config
 
 class Ui_ModificarArtista(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
+
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            # Se obtienen los resultados
+            #db_version = cur.fetchone()
+            print(self.id)
+            cur.execute( "SELECT artist.name FROM artist WHERE artist.artistid=%s",(self.id,))
+            nombre=cur.fetchall()[0][0]
+            print(nombre)
+            
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+        #aqui empieza lo que estaba originalmente------------------------------------------------------------------------------------------------------------
         Form.setObjectName("Form")
         Form.resize(333, 232)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
@@ -25,6 +53,7 @@ class Ui_ModificarArtista(object):
         font.setBold(True)
         font.setWeight(75)
         self.modificarButton.setFont(font)
+        self.modificarButton.clicked.connect(self.modificarArtista)
         self.modificarButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.modificarButton.setObjectName("modificarButton")
@@ -44,6 +73,7 @@ class Ui_ModificarArtista(object):
         self.modificarCancionLabel.setFont(font)
         self.modificarCancionLabel.setObjectName("modificarCancionLabel")
         self.nombreInput = QtWidgets.QLineEdit(Form)
+        self.nombreInput.setText(nombre)
         self.nombreInput.setGeometry(QtCore.QRect(130, 100, 161, 20))
         self.nombreInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
@@ -58,6 +88,36 @@ class Ui_ModificarArtista(object):
         self.modificarButton.setText(_translate("Form", "Modificar"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
         self.modificarCancionLabel.setText(_translate("Form", "Modificar Artista"))
+
+    def modificarArtista(self):
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            # Se obtienen los resultados
+            #db_version = cur.fetchone()
+            nombre=self.nombreInput.text()
+            id=self.id
+            cur.execute('''
+                UPDATE artist
+                SET name = %s
+                WHERE artistid = %s
+                ''',(nombre, id))
+            conexion.commit()
+            
+            
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":
