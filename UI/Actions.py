@@ -22,6 +22,7 @@ from eliminarCancion import Ui_EliminarCancion
 from inactivarCancion import Ui_InactivarCancion
 import psycopg2
 from config import config
+import sys
 
 
 class Ui_bienvenidaLabel(object):
@@ -30,7 +31,7 @@ class Ui_bienvenidaLabel(object):
         #print("este es el id del usuario "+str(id))
     def setupUi(self, bienvenidaLabel):
         bienvenidaLabel.setObjectName("bienvenidaLabel")
-        bienvenidaLabel.resize(464, 425)
+        bienvenidaLabel.resize(464, 475)
         bienvenidaLabel.setStyleSheet("background-color: rgb(85, 85, 255);")
         bienvenidaLabel.setWindowIcon(QIcon('icono.png'))
         self.label = QtWidgets.QLabel(bienvenidaLabel)
@@ -117,8 +118,27 @@ class Ui_bienvenidaLabel(object):
         self.artistaEliminar.setObjectName("artistaEliminar")
         self.botonEliminar.clicked.connect(self.openEliminar)
 
+        self.salir = QtWidgets.QPushButton(bienvenidaLabel)
+        self.salir.setGeometry(QtCore.QRect(115, 415, 231, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.salir.setFont(font)
+        self.salir.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.salir.setObjectName("salir")
+
         self.retranslateUi(bienvenidaLabel)
         QtCore.QMetaObject.connectSlotsByName(bienvenidaLabel)
+
+    def goOut(self, Form):
+        #self.window = QtWidgets.QWidget()
+        #self.ui = Ui_buscarUsuario()
+        #self.ui.setupUi(self.window)
+        #Form.hide()
+        #self.window.show()
+        sys.exit()
 
     def retranslateUi(self, bienvenidaLabel):
         _translate = QtCore.QCoreApplication.translate
@@ -146,6 +166,8 @@ class Ui_bienvenidaLabel(object):
         self.cancionEliminar.setText(_translate("bienvenidaLabel", "Canción"))
         self.albumEliminar.setText(_translate("bienvenidaLabel", "Álbum"))
         self.artistaEliminar.setText(_translate("bienvenidaLabel", "Artista"))
+        self.salir.setText(_translate("bienvenidaLabel", "Salir"))
+        self.salir.clicked.connect(lambda:self.goOut(bienvenidaLabel))
     
     def openRegistrar(self):
         conexion=None

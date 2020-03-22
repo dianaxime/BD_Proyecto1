@@ -130,7 +130,7 @@ class Ui_SignInWidget(object):
                         self.id=idUsuario[0][0]
                         self.ui = Ui_bienvenidaLabel(self.id)
                         self.ui.setupUi(self.window)
-                        #SignInWidget.hide()
+                        SignInWidget.hide()
                         self.window.show()
                     else: 
                         invalid=QMessageBox()

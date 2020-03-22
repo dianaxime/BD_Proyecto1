@@ -74,7 +74,7 @@ class Ui_adminSignIn(object):
         self.sigInButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.sigInButton.setObjectName("sigInButton")
-        self.sigInButton.clicked.connect(self.validateInfo)
+        #self.sigInButton.clicked.connect(self.validateInfo)
         self.retranslateUi(adminSignIn)
         QtCore.QMetaObject.connectSlotsByName(adminSignIn)
 
@@ -86,8 +86,9 @@ class Ui_adminSignIn(object):
         self.emailLabel.setText(_translate("adminSignIn", "Email:"))
         self.passwordLabel.setText(_translate("adminSignIn", "Contraseña:"))
         self.sigInButton.setText(_translate("adminSignIn", "Sign In"))
+        self.sigInButton.clicked.connect(lambda:self.validateInfo(adminSignIn))
 
-    def validateInfo(self):
+    def validateInfo(self, adminSignIn):
         #Aqui iria verificar el user y password en BD
         conexion=None
         try:
@@ -134,17 +135,11 @@ class Ui_adminSignIn(object):
                     cur.execute("INSERT INTO permisos_admin (permisoid, contraseña, employeeid)VALUES (%s, %s,%s)", (IDoficial, contrasena, IDoficial,))
                     print("estoy aqui")
                     conexion.commit()
-                    """self.window = QtWidgets.QWidget()
-                    self.ui = Ui_SignInWidget()
-                    self.ui.setupUi(self.window)
-                    #LogIn.hide()
-                    self.window.show()"""
-                    #LogIn.hide()
-                    self.window = QtWidgets.QWidget()
-                    self.ui = Ui_adminLogIn()
-                    self.ui.setupUi(self.window)
-                    #LogIn.hide()
-                    self.window.show()
+                    #self.window = QtWidgets.QWidget()
+                    #self.ui = Ui_adminLogIn()
+                    #self.ui.setupUi(self.window)
+                    adminSignIn.hide()
+                    #self.window.show()
             else:
                 blank=QMessageBox()
                 blank.setIcon(QMessageBox.Information)

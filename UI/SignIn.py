@@ -10,12 +10,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from logIn import *
+import psycopg2
+from config import config
 
 class Ui_LogIn(object):
     def setupUi(self, LogIn):
         self.LogIn=LogIn
         LogIn.setObjectName("LogIn")
-        LogIn.resize(261, 353)
+        LogIn.resize(261, 268)
         LogIn.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
         LogIn.setWindowIcon(QIcon('icono.png'))
@@ -31,26 +33,14 @@ class Ui_LogIn(object):
         font.setPointSize(9)
         self.apellidoLabel.setFont(font)
         self.apellidoLabel.setObjectName("apellidoLabel")
-        self.paisLabel = QtWidgets.QLabel(LogIn)
-        self.paisLabel.setGeometry(QtCore.QRect(20, 120, 47, 13))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.paisLabel.setFont(font)
-        self.paisLabel.setObjectName("paisLabel")
         self.emailLabel = QtWidgets.QLabel(LogIn)
-        self.emailLabel.setGeometry(QtCore.QRect(20, 160, 47, 13))
+        self.emailLabel.setGeometry(QtCore.QRect(20, 120, 47, 13))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.emailLabel.setFont(font)
         self.emailLabel.setObjectName("emailLabel")
-        self.userLabel = QtWidgets.QLabel(LogIn)
-        self.userLabel.setGeometry(QtCore.QRect(20, 200, 47, 13))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.userLabel.setFont(font)
-        self.userLabel.setObjectName("userLabel")
         self.passwordLabel = QtWidgets.QLabel(LogIn)
-        self.passwordLabel.setGeometry(QtCore.QRect(20, 240, 71, 20))
+        self.passwordLabel.setGeometry(QtCore.QRect(20, 160, 71, 20))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.passwordLabel.setFont(font)
@@ -65,28 +55,18 @@ class Ui_LogIn(object):
         self.apellidoInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
         self.apellidoInput.setObjectName("apellidoInput")
-        self.paisInput = QtWidgets.QLineEdit(LogIn)
-        self.paisInput.setGeometry(QtCore.QRect(110, 120, 113, 20))
-        self.paisInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
-"color: rgb(72, 72, 72);")
-        self.paisInput.setObjectName("paisInput")
         self.emailInput = QtWidgets.QLineEdit(LogIn)
-        self.emailInput.setGeometry(QtCore.QRect(110, 160, 113, 20))
+        self.emailInput.setGeometry(QtCore.QRect(110, 120, 113, 20))
         self.emailInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
         self.emailInput.setObjectName("emailInput")
-        self.userInput = QtWidgets.QLineEdit(LogIn)
-        self.userInput.setGeometry(QtCore.QRect(110, 200, 113, 20))
-        self.userInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
-"color: rgb(72, 72, 72);")
-        self.userInput.setObjectName("userInput")
         self.passwordInput = QtWidgets.QLineEdit(LogIn)
-        self.passwordInput.setGeometry(QtCore.QRect(110, 240, 113, 20))
+        self.passwordInput.setGeometry(QtCore.QRect(110, 160, 113, 20))
         self.passwordInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
         self.passwordInput.setObjectName("passwordInput")
         self.sigInButton = QtWidgets.QPushButton(LogIn)
-        self.sigInButton.setGeometry(QtCore.QRect(70, 290, 101, 41))
+        self.sigInButton.setGeometry(QtCore.QRect(70, 200, 101, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -105,9 +85,7 @@ class Ui_LogIn(object):
         LogIn.setWindowTitle(_translate("LogIn", "Sign In"))
         self.nombreLabel.setText(_translate("LogIn", "Nombre:"))
         self.apellidoLabel.setText(_translate("LogIn", "Apellido:"))
-        self.paisLabel.setText(_translate("LogIn", "País:"))
         self.emailLabel.setText(_translate("LogIn", "Email:"))
-        self.userLabel.setText(_translate("LogIn", "Usuario:"))
         self.passwordLabel.setText(_translate("LogIn", "Contraseña:"))
         self.sigInButton.setText(_translate("LogIn", "Sign In"))
         self.sigInButton.clicked.connect(lambda:self.validateInfo(LogIn))

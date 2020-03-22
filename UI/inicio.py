@@ -12,6 +12,8 @@ from PyQt5.QtGui import QIcon
 #import admin_rc
 #import logo_rc
 #import user_rc
+from adminLogIn import *
+from logIn import *
 
 class Ui_Inicio(object):
     def setupUi(self, Inicio):
@@ -66,12 +68,27 @@ class Ui_Inicio(object):
         self.retranslateUi(Inicio)
         QtCore.QMetaObject.connectSlotsByName(Inicio)
 
+    def goUsuario(self, Form):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_SignInWidget()
+        self.ui.setupUi(self.window)
+        Form.hide()
+        self.window.show()
+
+    def goAdmin(self, Form):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_adminLogIn()
+        self.ui.setupUi(self.window)
+        Form.hide()
+        self.window.show()
+
     def retranslateUi(self, Inicio):
         _translate = QtCore.QCoreApplication.translate
         Inicio.setWindowTitle(_translate("Inicio", "Pystream"))
         self.label_2.setText(_translate("Inicio", "<html><head/><body><p align=\"center\"><span style=\" font-size:10pt; font-weight:600;\">Usuarios</span></p></body></html>"))
         self.label_3.setText(_translate("Inicio", "<html><head/><body><p align=\"center\"><span style=\" font-size:10pt; font-weight:600;\">Administradores</span></p></body></html>"))
-
+        self.usuariosButton.clicked.connect(lambda:self.goUsuario(Inicio))
+        self.adminButton.clicked.connect(lambda:self.goAdmin(Inicio))
 
 if __name__ == "__main__":
     import sys

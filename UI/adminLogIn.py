@@ -56,7 +56,7 @@ class Ui_adminLogIn(object):
         self.signIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.signIn.setObjectName("signIn")
-        self.signIn.clicked.connect(self.openSignIn)
+        #self.signIn.clicked.connect(self.openSignIn)
         self.logIn = QtWidgets.QPushButton(adminLogIn)
         self.logIn.setGeometry(QtCore.QRect(90, 150, 141, 41))
         font = QtGui.QFont()
@@ -67,7 +67,7 @@ class Ui_adminLogIn(object):
         self.logIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.logIn.setObjectName("logIn")
-        self.logIn.clicked.connect(self.openActions)
+        #self.logIn.clicked.connect(self.openActions)
         self.retranslateUi(adminLogIn)
         QtCore.QMetaObject.connectSlotsByName(adminLogIn)
 
@@ -78,8 +78,10 @@ class Ui_adminLogIn(object):
         self.passwordLabel.setText(_translate("adminLogIn", "Contraseña:"))
         self.signIn.setText(_translate("adminLogIn", "Sign In"))
         self.logIn.setText(_translate("adminLogIn", "Log In"))
+        self.logIn.clicked.connect(lambda:self.openActions(adminLogIn))
+        self.signIn.clicked.connect(lambda:self.openSignIn(adminLogIn))
 
-    def openActions(self):
+    def openActions(self, adminLogIn):
         #Aqui iria verificar el user y password en BD
         conexion=None
         try:
@@ -118,7 +120,7 @@ class Ui_adminLogIn(object):
                         self.window = QtWidgets.QWidget()
                         self.ui = Ui_adminActions()
                         self.ui.setupUi(self.window)
-                        #SignInWidget.hide()
+                        adminLogIn.hide()
                         self.window.show()
                     else: 
                         invalid=QMessageBox()
@@ -140,11 +142,11 @@ class Ui_adminLogIn(object):
                 conexion.close()
 
 
-    def openSignIn(self):
+    def openSignIn(self, adminLogIn):
         self.window = QtWidgets.QWidget()
         self.ui = Ui_adminSignIn()
         self.ui.setupUi(self.window)
-        adminLogIn.hide()
+        #adminLogIn.hide()
         self.window.show()
 
 if __name__ == "__main__":
