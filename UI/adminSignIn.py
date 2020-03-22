@@ -80,7 +80,7 @@ class Ui_adminSignIn(object):
 
     def retranslateUi(self, adminSignIn):
         _translate = QtCore.QCoreApplication.translate
-        adminSignIn.setWindowTitle(_translate("adminSignIn", "Form"))
+        adminSignIn.setWindowTitle(_translate("adminSignIn", "Sign In"))
         self.nombreLabel.setText(_translate("adminSignIn", "Nombre:"))
         self.apellidoLabel.setText(_translate("adminSignIn", "Apellido:"))
         self.emailLabel.setText(_translate("adminSignIn", "Email:"))

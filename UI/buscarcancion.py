@@ -59,7 +59,7 @@ class Ui_BuscarCancion(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Buscar cancion"))
         self.continuarButton.setText(_translate("Form", "Continuar"))
         self.buscarLabel.setText(_translate("Form", "Ingrese canción a modificar:"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))

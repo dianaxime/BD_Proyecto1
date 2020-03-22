@@ -58,7 +58,7 @@ class Ui_EliminarAlbum(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Eliminar album"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
         self.eliminarCancionLabel.setText(_translate("Form", "Eliminar Álbum"))
         self.eliminarButton.setText(_translate("Form", "Eliminar"))

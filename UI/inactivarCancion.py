@@ -58,7 +58,7 @@ class Ui_InactivarCancion(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Inactivar cancion"))
         self.buscarLabel.setText(_translate("Form", "Ingrese canción a inactivar:"))
         self.continuarButton.setText(_translate("Form", "Inactivar"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))

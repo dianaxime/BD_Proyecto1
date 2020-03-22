@@ -59,7 +59,7 @@ class Ui_BuscarAlbum(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Buscar album"))
         self.continuarButton.setText(_translate("Form", "Continuar"))
         self.buscarLabel.setText(_translate("Form", "Ingrese álbum a modificar:"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))

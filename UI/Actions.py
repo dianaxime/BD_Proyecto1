@@ -117,7 +117,7 @@ class Ui_bienvenidaLabel(object):
 
     def retranslateUi(self, bienvenidaLabel):
         _translate = QtCore.QCoreApplication.translate
-        bienvenidaLabel.setWindowTitle(_translate("bienvenidaLabel", "Form"))
+        bienvenidaLabel.setWindowTitle(_translate("bienvenidaLabel", "Principal"))
         self.label.setText(_translate("bienvenidaLabel", "Bienvenido"))
         # GROUP BOX REGISTRO
         self.registrarGrupo.setTitle(_translate("bienvenidaLabel", "Registrar"))

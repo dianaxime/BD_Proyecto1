@@ -89,7 +89,7 @@ class Ui_artistasAlbums(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Artistas con mas albums", "Form"))
+        Form.setWindowTitle(_translate("Artistas con mas albums", "Artistas con mas albums"))
         self.volverButton.setText(_translate("Form", "Volver"))
         self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Artistas con más álbums</span></p></body></html>"))
         self.volverButton.clicked.connect(lambda:self.openReportes(Form))

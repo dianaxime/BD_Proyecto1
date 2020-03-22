@@ -58,7 +58,7 @@ class Ui_IngresarArtista(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Ingresar artista"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
         self.ingresarButton.setText(_translate("Form", "Ingresar"))
         self.ingresarArtistaLabel.setText(_translate("Form", "Ingresar Artista"))

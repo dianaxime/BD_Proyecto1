@@ -92,7 +92,7 @@ class Ui_ModificarAlbum(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Modificar album"))
         self.modificarAlbumLabel.setText(_translate("Form", "Modificar Álbum"))
         self.modificarButton.setText(_translate("Form", "Modificar"))
         self.tituloLabel.setText(_translate("Form", "Título:"))

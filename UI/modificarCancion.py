@@ -188,7 +188,7 @@ class Ui_ModificarCancion(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Modificar cancion"))
         self.tipoLabel.setText(_translate("Form", "Tipo:"))
         self.generoLabel.setText(_translate("Form", "Género:"))
         self.precioLabel.setText(_translate("Form", "Precio:"))

@@ -80,7 +80,7 @@ class Ui_SignInWidget(object):
 
     def retranslateUi(self, SignInWidget):
         _translate = QtCore.QCoreApplication.translate
-        SignInWidget.setWindowTitle(_translate("SignInWidget", "Form"))
+        SignInWidget.setWindowTitle(_translate("SignInWidget", "Log In"))
         self.userLabel.setText(_translate("SignInWidget", "Correo:"))
         self.passwordLabel.setText(_translate("SignInWidget", "Contraseña:"))
         self.signIn.setText(_translate("SignInWidget", "Sign In"))
