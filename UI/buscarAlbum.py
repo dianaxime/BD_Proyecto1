@@ -9,6 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
 import psycopg2
 from config import config
 from modificarAlbum import *

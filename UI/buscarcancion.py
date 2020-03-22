@@ -9,10 +9,13 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
-
-
+import psycopg2
+from config import config
+from modificarCancion import *
+from PyQt5.QtWidgets import QMessageBox
 
 class Ui_BuscarCancion(object):
+
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(339, 221)
@@ -26,6 +29,7 @@ class Ui_BuscarCancion(object):
         font.setBold(True)
         font.setWeight(75)
         self.continuarButton.setFont(font)
+        self.continuarButton.clicked.connect(self.buscarCancion)
         self.continuarButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.continuarButton.setObjectName("continuarButton")
@@ -59,6 +63,52 @@ class Ui_BuscarCancion(object):
         self.continuarButton.setText(_translate("Form", "Continuar"))
         self.buscarLabel.setText(_translate("Form", "Ingrese canción a modificar:"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
+
+    def buscarCancion(self):
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+            nombre=self.nombreInput.text()
+           
+            if nombre != '' :
+                cur.execute( "SELECT track.trackid FROM track WHERE track.name=%s",(nombre,))
+                IDArtO=cur.fetchall()#[0][0]
+                if (len(IDArtO)==0):
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("El track que usted desea modificar no esta registrado")
+                    blank.exec()
+                else:
+                    IDArtO=IDArtO[0][0]
+                    print(IDArtO)
+                    self.window = QtWidgets.QWidget()
+                    self.id=IDArtO
+                    self.ui =Ui_ModificarCancion(self.id)
+                    self.ui.setupUi(self.window)
+                    #LogIn.hide()
+                    self.window.show()
+                
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":
