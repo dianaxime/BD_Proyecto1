@@ -13,7 +13,8 @@ from masCanciones import *
 from artistasAlbums import *
 from cancionesDuracion import *
 from generoPromedio import *
-
+from usuariosCanciones import *
+from PyQt5.QtWidgets import QMessageBox
 
 class Ui_Reportes(object):
     def setupUi(self, Form):
@@ -68,24 +69,36 @@ class Ui_Reportes(object):
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
-        if self.masAlbums.isChecked():
+        elif self.masAlbums.isChecked():
             self.window = QtWidgets.QWidget()
             self.ui = Ui_artistasAlbums()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
-        if self.mayorDuracion.isChecked():
+        elif self.mayorDuracion.isChecked():
             self.window = QtWidgets.QWidget()
             self.ui = Ui_cancionesDuracion()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
-        if self.promedioDuracion.isChecked():
+        elif self.masRegistradas.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_usuariosCanciones()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.promedioDuracion.isChecked():
             self.window = QtWidgets.QWidget()
             self.ui = Ui_generoPromedio()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
+        else:
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("ERROR")
+            blank.setText("Por favor seleccione una opción")
+            blank.exec()
 
     def openActions(self, Form):
         #self.window = QtWidgets.QWidget()

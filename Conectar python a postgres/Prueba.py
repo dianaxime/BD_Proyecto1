@@ -64,6 +64,12 @@ def conectar():
 
         print("--------------------------------------------------")
 
+        cur.execute( "SELECT customer.firstname, COUNT(creador_track.creadorid) FROM creador_track JOIN customer ON customer.customerid=creador_track.creadorid GROUP BY customer.customerid ORDER BY COUNT(creador_track.creadorid) DESC LIMIT 10" )
+
+        for a in cur.fetchall() :
+            print(a)
+
+        print("---------------------------------------------------")
         #insercion de datos
         # Ejecutamos una insercion registrar artista
         #necesitamos name y artist id
