@@ -9,10 +9,69 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from permisosUsuario import *
+from PyQt5.QtWidgets import QMessageBox
+import psycopg2
+from config import config
 
 
+class Ui_buscarUsuario(object):
+    def conectar(self,Form):
+        nombre=self.nombreInput.text()
+        apellido=self.apellidoInput.text()
+        """ Conexión al servidor de pases de datos PostgreSQL """
+        conexion = None
+        if nombre != '' and apellido != '':
+            try:
+                # Lectura de los parámetros de conexion
+                params = config()
+                # Conexion al servidor de PostgreSQL
+                conexion = psycopg2.connect(**params)
+                # creación del cursor
+                cur = conexion.cursor()
+                # Ejecución la consulta para obtener la conexión
+                cur.execute('SELECT version()')
+                # Se obtienen los resultados
+                db_version = cur.fetchone()
+                # Ejecutamos una consulta
+                cur.execute("SELECT customer.customerid, customer.firstname, customer.lastname FROM customer WHERE customer.firstname = '{0}'".format(nombre))
+                #Insertamos los datos devueltos por la consulta en la tabla
+                data=cur.fetchall()
+                if len(data)>0:
+                    if data[0][1] == nombre and data[0][2] == apellido:
+                        self.window = QtWidgets.QWidget()
+                        self.message = data
+                        self.ui = Ui_permisosUsuario(self.message)
+                        self.ui.setupUi(self.window)
+                        Form.hide()
+                        self.window.show()
+                    else:
+                        blank=QMessageBox()
+                        blank.setIcon(QMessageBox.Information)
+                        blank.setWindowTitle("ERROR")
+                        blank.setText("La informacion no coincide")
+                        blank.exec()
+                else:
+                    blank=QMessageBox()
+                    blank.setIcon(QMessageBox.Information)
+                    blank.setWindowTitle("ERROR")
+                    blank.setText("Por favor ingrese un usuario válido")
+                    blank.exec()        
+                # Cerremos el cursor
+                cur.close()
+            except (Exception, psycopg2.DatabaseError) as error:
+                print(error)
+            finally:
+                if conexion is not None:
+                    conexion.close()
+        else:
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("ERROR")
+            blank.setText("Llene los recuadros")
+            blank.exec()
+        
 
-class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(324, 251)
@@ -66,18 +125,19 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Buscar usuario"))
         self.continuarButton.setText(_translate("Form", "Continuar"))
         self.buscarLabel.setText(_translate("Form", "Ingrese usuario a modificar:"))
         self.nombreLabel.setText(_translate("Form", "Nombre:"))
         self.apellidoLabel.setText(_translate("Form", "Apellido:"))
+        self.continuarButton.clicked.connect(lambda:self.conectar(Form))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_buscarUsuario()
     ui.setupUi(Form)
     Form.show()
     Form.setWindowTitle("Buscar Usuario")

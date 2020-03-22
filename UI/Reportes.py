@@ -52,6 +52,11 @@ class Ui_Reportes(object):
 "color: rgb(72, 72, 72);")
         self.generarReporte.setObjectName("generarReporte")
         #self.generarReporte.clicked.connect(self.goTo)
+        self.volverButton = QtWidgets.QPushButton(Form)
+        self.volverButton.setGeometry(QtCore.QRect(20, 300, 75, 23))
+        self.volverButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.volverButton.setObjectName("volverButton")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -82,6 +87,13 @@ class Ui_Reportes(object):
             #Form.hide()
             self.window.show()
 
+    def openActions(self, Form):
+        #self.window = QtWidgets.QWidget()
+        #self.ui = Ui_Reportes()
+        #self.ui.setupUi(self.window)
+        Form.hide()
+        #self.window.show()
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Reportes"))
@@ -92,7 +104,9 @@ class Ui_Reportes(object):
         self.masRegistradas.setText(_translate("Form", "Usuarios con más canciones registradas"))
         self.promedioDuracion.setText(_translate("Form", "Promedio de duración de canciones por género"))
         self.generarReporte.setText(_translate("Form", "Generar"))
+        self.volverButton.setText(_translate("Form", "Volver"))
         self.generarReporte.clicked.connect(lambda:self.goTo(Form))
+        self.volverButton.clicked.connect(lambda:self.openActions(Form))
 
 
 if __name__ == "__main__":

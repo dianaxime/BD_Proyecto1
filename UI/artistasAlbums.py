@@ -52,11 +52,11 @@ class Ui_artistasAlbums(object):
         Form.setObjectName("Form")
         Form.resize(560, 449)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.volverButton = QtWidgets.QPushButton(Form)
         self.volverButton.setGeometry(QtCore.QRect(20, 410, 75, 23))
         self.volverButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
-        Form.setWindowIcon(QIcon('icono.png'))
         self.volverButton.setObjectName("volverButton")
         #self.volverButton.clicked.connect(self.openReportes)
         self.titutloLabel = QtWidgets.QLabel(Form)

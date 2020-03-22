@@ -9,6 +9,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from buscarUsuario import *
+from Reportes import *
 
 
 class Ui_adminActions(object):
@@ -18,26 +20,26 @@ class Ui_adminActions(object):
         adminActions.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
         adminActions.setWindowIcon(QIcon('icono.png'))
-        self.signIn = QtWidgets.QPushButton(adminActions)
-        self.signIn.setGeometry(QtCore.QRect(40, 170, 231, 41))
+        self.actionsAdmin = QtWidgets.QPushButton(adminActions)
+        self.actionsAdmin.setGeometry(QtCore.QRect(40, 170, 231, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
         font.setWeight(75)
-        self.signIn.setFont(font)
-        self.signIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+        self.actionsAdmin.setFont(font)
+        self.actionsAdmin.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
-        self.signIn.setObjectName("signIn")
-        self.logIn = QtWidgets.QPushButton(adminActions)
-        self.logIn.setGeometry(QtCore.QRect(40, 110, 231, 41))
+        self.actionsAdmin.setObjectName("actionsAdmin")
+        self.modificar = QtWidgets.QPushButton(adminActions)
+        self.modificar.setGeometry(QtCore.QRect(40, 110, 231, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
         font.setWeight(75)
-        self.logIn.setFont(font)
-        self.logIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+        self.modificar.setFont(font)
+        self.modificar.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
-        self.logIn.setObjectName("logIn")
+        self.modificar.setObjectName("modificar")
         self.label = QtWidgets.QLabel(adminActions)
         self.label.setGeometry(QtCore.QRect(20, 30, 261, 41))
         self.label.setObjectName("label")
@@ -45,12 +47,28 @@ class Ui_adminActions(object):
         self.retranslateUi(adminActions)
         QtCore.QMetaObject.connectSlotsByName(adminActions)
 
+    def goReportes(self, Form):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_Reportes()
+        self.ui.setupUi(self.window)
+        #Form.hide()
+        self.window.show()
+
+    def goPermisos(self, Form):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_buscarUsuario()
+        self.ui.setupUi(self.window)
+        #Form.hide()
+        self.window.show()
+
     def retranslateUi(self, adminActions):
         _translate = QtCore.QCoreApplication.translate
-        adminActions.setWindowTitle(_translate("adminActions", "Form"))
-        self.signIn.setText(_translate("adminActions", "Reportes"))
-        self.logIn.setText(_translate("adminActions", "Activar/Desactivar Usuarios"))
+        adminActions.setWindowTitle(_translate("adminActions", "Acciones administrador"))
+        self.actionsAdmin.setText(_translate("adminActions", "Reportes"))
+        self.modificar.setText(_translate("adminActions", "Activar/Desactivar Usuarios"))
         self.label.setText(_translate("adminActions", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt; font-weight:600;\">Bienvenido</span></p></body></html>"))
+        self.actionsAdmin.clicked.connect(lambda:self.goReportes(adminActions))
+        self.modificar.clicked.connect(lambda:self.goPermisos(adminActions))
 
 
 if __name__ == "__main__":
