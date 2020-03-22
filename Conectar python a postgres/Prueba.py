@@ -13,10 +13,8 @@ def conectar():
         # Conexion al servidor de PostgreSQL
         print('Conectando a la base de datos PostgreSQL...')
         conexion = psycopg2.connect(**params)
-
         # creación del cursor
         cur = conexion.cursor()
-
         # Ejecución la consulta para obtener la conexión
         print('La version de PostgreSQL es la:')
         cur.execute('SELECT version()')
