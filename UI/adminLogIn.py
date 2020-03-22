@@ -10,6 +10,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMessageBox
+import psycopg2
+from config import config
+from adminActions import *
+from adminSignIn import *
 
 class Ui_adminLogIn(object):
     def setupUi(self, adminLogIn):
@@ -51,6 +56,7 @@ class Ui_adminLogIn(object):
         self.signIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.signIn.setObjectName("signIn")
+        self.signIn.clicked.connect(self.openSignIn)
         self.logIn = QtWidgets.QPushButton(adminLogIn)
         self.logIn.setGeometry(QtCore.QRect(90, 150, 141, 41))
         font = QtGui.QFont()
@@ -61,7 +67,7 @@ class Ui_adminLogIn(object):
         self.logIn.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.logIn.setObjectName("logIn")
-
+        self.logIn.clicked.connect(self.openActions)
         self.retranslateUi(adminLogIn)
         QtCore.QMetaObject.connectSlotsByName(adminLogIn)
 
@@ -73,6 +79,73 @@ class Ui_adminLogIn(object):
         self.signIn.setText(_translate("adminLogIn", "Sign In"))
         self.logIn.setText(_translate("adminLogIn", "Log In"))
 
+    def openActions(self):
+        #Aqui iria verificar el user y password en BD
+        conexion=None
+        try:
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            #print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            user=self.userInput.text()
+            password=self.passwordInput.text()
+
+            if user != '' and password != '':
+                cur.execute("SELECT contraseña FROM permisos_admin JOIN employee ON employee.employeeid=permisos_admin.employeeid  WHERE employee.email=%s",(user,))
+                contrasenaUsuario=cur.fetchall()
+                print(password)
+                if (len(contrasenaUsuario)==0):
+                    invalid=QMessageBox()
+                    invalid.setIcon(QMessageBox.Information)
+                    invalid.setWindowTitle("INVALIDO")
+                    invalid.setText("Correo no registrado")
+                    invalid.exec()
+                else:
+                    if contrasenaUsuario[0][0] == password:
+                        #SignInWidget.hide()
+                        self.window = QtWidgets.QWidget()
+                        self.ui = Ui_adminActions()
+                        self.ui.setupUi(self.window)
+                        #SignInWidget.hide()
+                        self.window.show()
+                    else: 
+                        invalid=QMessageBox()
+                        invalid.setIcon(QMessageBox.Information)
+                        invalid.setWindowTitle("INVALIDO")
+                        invalid.setText("Contraseña incorrectos")
+                        invalid.exec()
+            else:
+                blank=QMessageBox()
+                blank.setIcon(QMessageBox.Information)
+                blank.setWindowTitle("INCOMPLETO")
+                blank.setText("Por favor llene los campos")
+                blank.exec()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+
+
+    def openSignIn(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_adminSignIn()
+        self.ui.setupUi(self.window)
+        adminLogIn.hide()
+        self.window.show()
 
 if __name__ == "__main__":
     import sys
