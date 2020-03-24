@@ -14,17 +14,20 @@ from artistasAlbums import *
 from cancionesDuracion import *
 from generoPromedio import *
 from usuariosCanciones import *
+from artistasGeneros import *
+from artistPlaylist import *
+from duracionPlaylist import *
 from PyQt5.QtWidgets import QMessageBox
 
 class Ui_Reportes(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(388, 334)
+        Form.resize(378, 399)
         Form.setSizeIncrement(QtCore.QSize(0, 0))
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
         Form.setWindowIcon(QIcon('icono.png'))
         self.reportes = QtWidgets.QGroupBox(Form)
-        self.reportes.setGeometry(QtCore.QRect(20, 40, 331, 251))
+        self.reportes.setGeometry(QtCore.QRect(20, 30, 331, 311))
         self.reportes.setStyleSheet("color: rgb(236, 236, 236);")
         self.reportes.setObjectName("reportes")
         self.masCanciones = QtWidgets.QRadioButton(self.reportes)
@@ -47,14 +50,30 @@ class Ui_Reportes(object):
         self.promedioDuracion.setGeometry(QtCore.QRect(20, 150, 251, 17))
         self.promedioDuracion.setStyleSheet("color: rgb(236, 236, 236);")
         self.promedioDuracion.setObjectName("promedioDuracion")
+
+        self.generosArtista = QtWidgets.QRadioButton(self.reportes)
+        self.generosArtista.setGeometry(QtCore.QRect(20, 180, 251, 17))
+        self.generosArtista.setStyleSheet("color: rgb(236, 236, 236);")
+        self.generosArtista.setObjectName("generosArtista")
+
+        self.playlistArtist = QtWidgets.QRadioButton(self.reportes)
+        self.playlistArtist.setGeometry(QtCore.QRect(20, 210, 251, 17))
+        self.playlistArtist.setStyleSheet("color: rgb(236, 236, 236);")
+        self.playlistArtist.setObjectName("promedioDuracion")
+
+        self.playlistDuracion = QtWidgets.QRadioButton(self.reportes)
+        self.playlistDuracion.setGeometry(QtCore.QRect(20, 240, 251, 17))
+        self.playlistDuracion.setStyleSheet("color: rgb(236, 236, 236);")
+        self.playlistDuracion.setObjectName("promedioDuracion")
+
         self.generarReporte = QtWidgets.QPushButton(self.reportes)
-        self.generarReporte.setGeometry(QtCore.QRect(220, 190, 71, 41))
+        self.generarReporte.setGeometry(QtCore.QRect(220, 250, 71, 41))
         self.generarReporte.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.generarReporte.setObjectName("generarReporte")
         #self.generarReporte.clicked.connect(self.goTo)
         self.volverButton = QtWidgets.QPushButton(Form)
-        self.volverButton.setGeometry(QtCore.QRect(20, 300, 75, 23))
+        self.volverButton.setGeometry(QtCore.QRect(20, 355, 75, 23))
         self.volverButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.volverButton.setObjectName("volverButton")
@@ -93,6 +112,24 @@ class Ui_Reportes(object):
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
+        elif self.generosArtista.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_artistasGeneros()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.playlistArtist.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_artistPlaylist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.playlistDuracion.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_duracionPlaylist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
         else:
             blank=QMessageBox()
             blank.setIcon(QMessageBox.Information)
@@ -116,6 +153,11 @@ class Ui_Reportes(object):
         self.mayorDuracion.setText(_translate("Form", "Canciones de mayor duración"))
         self.masRegistradas.setText(_translate("Form", "Usuarios con más canciones registradas"))
         self.promedioDuracion.setText(_translate("Form", "Promedio de duración de canciones por género"))
+        
+        self.generosArtista.setText(_translate("Form", "Artistas con mayor diversidad de géneros"))
+        self.playlistArtist.setText(_translate("Form", "Cantidad de artistas diferentes por playlist"))
+        self.playlistDuracion.setText(_translate("Form", "Duración de cada playlist"))
+        
         self.generarReporte.setText(_translate("Form", "Generar"))
         self.volverButton.setText(_translate("Form", "Volver"))
         self.generarReporte.clicked.connect(lambda:self.goTo(Form))
