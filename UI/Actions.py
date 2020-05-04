@@ -20,6 +20,9 @@ from eliminarAlbum import Ui_EliminarAlbum
 from eliminarArtista import Ui_EliminarArtista
 from eliminarCancion import Ui_EliminarCancion
 from inactivarCancion import Ui_InactivarCancion
+from searchArtist_form import Ui_searchArtist_form
+from searchAlbum_form import Ui_searchAlbum_form
+from searchTrack_form import Ui_searchTrack_form
 import psycopg2
 from config import config
 import sys
@@ -31,7 +34,7 @@ class Ui_bienvenidaLabel(object):
         #print("este es el id del usuario "+str(id))
     def setupUi(self, bienvenidaLabel):
         bienvenidaLabel.setObjectName("bienvenidaLabel")
-        bienvenidaLabel.resize(464, 475)
+        bienvenidaLabel.resize(464, 570)
         bienvenidaLabel.setStyleSheet("background-color: rgb(85, 85, 255);")
         bienvenidaLabel.setWindowIcon(QIcon('icono.png'))
         self.label = QtWidgets.QLabel(bienvenidaLabel)
@@ -65,14 +68,14 @@ class Ui_bienvenidaLabel(object):
         self.registrarBoton.clicked.connect(self.openRegistrar)
         # GROUP BOX Inactivar
         self.inactivarGrupo = QtWidgets.QGroupBox(bienvenidaLabel)
-        self.inactivarGrupo.setGeometry(QtCore.QRect(30, 290, 401, 111))
+        self.inactivarGrupo.setGeometry(QtCore.QRect(170, 290, 121, 180))
         self.inactivarGrupo.setStyleSheet("color: rgb(236, 236, 236);")
         self.inactivarGrupo.setObjectName("inactivarGrupo")
         self.cancionInactivar = QtWidgets.QRadioButton(self.inactivarGrupo)
         self.cancionInactivar.setGeometry(QtCore.QRect(20, 30, 82, 17))
         self.cancionInactivar.setObjectName("cancionInactivar")
         self.inactivarBoton = QtWidgets.QPushButton(self.inactivarGrupo)
-        self.inactivarBoton.setGeometry(QtCore.QRect(160, 60, 75, 31))
+        self.inactivarBoton.setGeometry(QtCore.QRect(25, 130, 75, 31))
         self.inactivarBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.inactivarBoton.setObjectName("inactivarBoton")
@@ -118,8 +121,29 @@ class Ui_bienvenidaLabel(object):
         self.artistaEliminar.setObjectName("artistaEliminar")
         self.botonEliminar.clicked.connect(self.openEliminar)
 
+        # GROUP BOX BUSCAR
+        self.buscarGrupo = QtWidgets.QGroupBox(bienvenidaLabel)
+        self.buscarGrupo.setGeometry(QtCore.QRect(30, 290, 122, 180))
+        self.buscarGrupo.setStyleSheet("color: rgb(236, 236, 236);")
+        self.buscarGrupo.setObjectName("buscarGrupo")
+        self.buscarBoton = QtWidgets.QPushButton(self.buscarGrupo)
+        self.buscarBoton.setGeometry(QtCore.QRect(25, 130, 75, 31))
+        self.buscarBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.registrarBoton.setObjectName("registrarBoton")
+        self.cancionBuscar = QtWidgets.QRadioButton(self.buscarGrupo)
+        self.cancionBuscar.setGeometry(QtCore.QRect(20, 40, 82, 17))
+        self.cancionBuscar.setObjectName("cancionBuscar")
+        self.albumBuscar = QtWidgets.QRadioButton(self.buscarGrupo)
+        self.albumBuscar.setGeometry(QtCore.QRect(20, 70, 82, 17))
+        self.albumBuscar.setObjectName("albumBuscar")
+        self.artistaBuscar = QtWidgets.QRadioButton(self.buscarGrupo)
+        self.artistaBuscar.setGeometry(QtCore.QRect(20, 100, 82, 17))
+        self.artistaBuscar.setObjectName("artistaBuscar")
+        self.buscarBoton.clicked.connect(self.openBuscar)
+
         self.salir = QtWidgets.QPushButton(bienvenidaLabel)
-        self.salir.setGeometry(QtCore.QRect(115, 415, 231, 41))
+        self.salir.setGeometry(QtCore.QRect(115, 500, 231, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -160,6 +184,12 @@ class Ui_bienvenidaLabel(object):
         self.cancionModificar.setText(_translate("bienvenidaLabel", "Canción"))
         self.albumModificar.setText(_translate("bienvenidaLabel", "Álbum"))
         self.artistaModificar.setText(_translate("bienvenidaLabel", "Artista"))
+        # GROUP BOX BUSCAR
+        self.buscarGrupo.setTitle(_translate("bienvenidaLabel", "Buscador"))
+        self.buscarBoton.setText(_translate("bienvenidaLabel", "Buscar"))
+        self.cancionBuscar.setText(_translate("bienvenidaLabel", "Canción"))
+        self.albumBuscar.setText(_translate("bienvenidaLabel", "Álbum"))
+        self.artistaBuscar.setText(_translate("bienvenidaLabel", "Artista"))
         # GROUP BOX ELIMINAR
         self.eliminarGrupo.setTitle(_translate("bienvenidaLabel", "Eliminar"))
         self.botonEliminar.setText(_translate("bienvenidaLabel", "Eliminar"))
@@ -168,6 +198,7 @@ class Ui_bienvenidaLabel(object):
         self.artistaEliminar.setText(_translate("bienvenidaLabel", "Artista"))
         self.salir.setText(_translate("bienvenidaLabel", "Salir"))
         self.salir.clicked.connect(lambda:self.goOut(bienvenidaLabel))
+
     
     def openRegistrar(self):
         conexion=None
@@ -366,6 +397,35 @@ class Ui_bienvenidaLabel(object):
         finally:
             if conexion is not None:
                 conexion.close()
+
+    def openBuscar(self):
+        #Se verifica cual esta seleccionado
+        id=self.id
+        if self.cancionBuscar.isChecked() == True:
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_searchTrack_form()
+            self.ui.setupUi(self.window)
+            #bienvenidaLabel.hide()
+            self.window.show()
+        elif self.artistaBuscar.isChecked() == True:
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_searchArtist_form()
+            self.ui.setupUi(self.window)
+            #bienvenidaLabel.hide()
+            self.window.show()
+        elif self.albumBuscar.isChecked() == True:
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_searchAlbum_form()
+            self.ui.setupUi(self.window)
+            #bienvenidaLabel.hide()
+            self.window.show()
+        else:
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("INCOMPLETO")
+            blank.setText("Por favor selecciona una opcion de modificacion")
+            blank.exec()
+
 
 if __name__ == "__main__":
     import sys

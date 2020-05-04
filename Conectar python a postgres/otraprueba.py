@@ -24,6 +24,22 @@ def conectar():
         db_version = cur.fetchone()
         # Se muestra la versión por pantalla
         print(db_version)
+
+        
+        cur.execute('''SELECT artist.name, COUNT(DISTINCT track.genreid)
+        FROM artist 
+        JOIN album ON album.artistid = artist.artistid
+        JOIN track ON track.albumid = album.albumid 
+        GROUP BY artist.name 
+        ORDER BY COUNT(DISTINCT track.genreid) DESC 
+        LIMIT 5''')
+
+        #Recorremos los resultados y los mostramos
+        for a,b in cur.fetchall() :
+            print(a,b)
+
+        print("--------------------------------------------------")
+
         # Ejecutamos una consulta
         """cur.execute( "SELECT genre.name, COUNT(*) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY COUNT(*) DESC LIMIT 10" )
 
@@ -160,7 +176,7 @@ def conectar():
         print("--------------------------------------------------")"""
 
         ##verificar contrasena de admin
-        correoIngresado="juancvs@gmail.com"
+        """correoIngresado="juancvs@gmail.com"
         contrasenaIngresada="soyJuanCarlos123"
         cur.execute("SELECT contraseña FROM permisos_admin JOIN employee ON employee.employeeid=permisos_admin.employeeid  WHERE employee.email=%s",(correoIngresado,))
         contrasenaUsuario=cur.fetchall()
@@ -188,11 +204,11 @@ def conectar():
             else:
                 print("contraseña incorrecta")
 
-        """cur.execute("DELETE FROM permisos_usuario WHERE permisos_usuario.contraseña = 'soyJuanDiego123'")
+        cur.execute("DELETE FROM permisos_usuario WHERE permisos_usuario.contraseña = 'soyJuanDiego123'")
         conexion.commit()
         cur.execute("DELETE FROM customer WHERE customer.firstname = 'Juan Diego'",(IDoficial,))
-        conexion.commit()"""
-        """cur.execute("DELETE FROM track WHERE track.trackid = 3504")
+        conexion.commit()
+        cur.execute("DELETE FROM track WHERE track.trackid = 3504")
         conexion.commit()"""
         # Cerremos el cursor
         cur.close()

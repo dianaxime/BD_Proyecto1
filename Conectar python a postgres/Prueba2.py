@@ -25,7 +25,47 @@ def conectar():
         db_version = cur.fetchone()
         # Se muestra la versión por pantalla
         print(db_version)
-        nombre="Balls to the Wall"
+
+        #Buscar track
+        nameTrack = "Fast As a Shark"
+        cur.execute("""
+            SELECT track.name, album.title, artist.name, track.unitprice
+            FROM track  
+                JOIN album ON album.albumid = track.albumid
+                JOIN artist ON artist.artistid = album.artistid
+            WHERE track.name = %s
+            """,(nameTrack,))
+        for a,b,c,d in cur.fetchall() :
+            print(a,"-",b,"-",c,"-",d)
+        print("--------------------------------------------------")
+
+        #Buscar album
+        nameAlbum = "AM"
+        cur.execute("""
+            SELECT artist.name, album.title, track.name
+            FROM album 
+                JOIN artist ON artist.artistid = album.artistid
+                JOIN track ON track.albumid = album.albumid
+            WHERE album.title = %s
+            """,(nameAlbum,))
+        for a,b,c in cur.fetchall() :
+            print(a,"-",b,"-",c)
+        print("--------------------------------------------------")
+
+        #Buscar artista
+        nameAlbum = "Accept"
+        cur.execute("""
+            SELECT album.title, artist.name
+            FROM album 
+                JOIN artist ON artist.artistid = album.artistid
+            WHERE artist.name = %s
+            """,(nameAlbum,))
+        for a,b in cur.fetchall() :
+            print(a,"-",b)
+        print("--------------------------------------------------")
+
+
+        """nombre="Balls to the Wall"
         cur.execute("SELECT actividad_track.trackid FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.name = %s)",(nombre,))
         IDTrack=cur.fetchall()
         print(IDTrack)
@@ -58,7 +98,7 @@ def conectar():
         else:
             #Sino existe se muestra error
             print("No existe")
-        """print("Artista")
+        print("Artista")
         cur.execute("SELECT * FROM artist LIMIT 10")
         # Recorremos los resultados y los mostramos
         for a,b in cur.fetchall() :
