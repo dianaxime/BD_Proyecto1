@@ -65,6 +65,7 @@ class Ui_searchAlbum_form(object):
 
     def buscarAlbum(self):
         #Buscar track
+        self.tableWidget.setRowCount(0)
         nombreAlbum=self.inputAlbum.text()
         conexion = None
         try:
@@ -107,12 +108,20 @@ class Ui_searchAlbum_form(object):
                         """,(nombreAlbum,))
 
                     row = 0
-                    for a,b,c in cur.fetchall():
-                        self.tableWidget.setRowCount(row + 1)
-                        self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
-                        self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
-                        self.tableWidget.setItem(row, 2, QTableWidgetItem(c))
-                        row += 1
+                    resultado = cur.fetchall()
+                    if (len(resultado) > 0):
+                        for a,b,c in resultado:
+                            self.tableWidget.setRowCount(row + 1)
+                            self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
+                            self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
+                            self.tableWidget.setItem(row, 2, QTableWidgetItem(c))
+                            row += 1
+                    else:
+                        blank=QMessageBox()
+                        blank.setIcon(QMessageBox.Information)
+                        blank.setWindowTitle("ADVERTENCIA")
+                        blank.setText("Este album no tiene informacion para mostrar")
+                        blank.exec()
                     cur.close()                
             else:
                 blank=QMessageBox()

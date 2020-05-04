@@ -14,7 +14,7 @@ CREATE TABLE permisos_usuario (
 DROP TABLE IF EXISTS permisos_admin;
 CREATE TABLE permisos_admin (
         		permisoid INT PRIMARY KEY,
-        		contraseÃ±a VARCHAR(30) NOT NULL,
+        		contraseña VARCHAR(30) NOT NULL,
         		employeeid INT NOT NULL,
         		FOREIGN KEY (employeeid) REFERENCES employee(employeeid)
         	);

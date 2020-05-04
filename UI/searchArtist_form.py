@@ -62,6 +62,7 @@ class Ui_searchArtist_form(object):
 
     def buscarArtist(self):
         #Buscar track
+        self.tableWidget.setRowCount(0)
         nombreArtist=self.inputArtist.text()
         conexion = None
         try:
@@ -102,11 +103,19 @@ class Ui_searchArtist_form(object):
                         WHERE artist.name = %s
                         """,(nombreArtist,))
                     row = 0
-                    for a,b in cur.fetchall():
-                        self.tableWidget.setRowCount(row + 1)
-                        self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
-                        self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
-                        row += 1
+                    resultado = cur.fetchall()
+                    if (len(resultado) > 0):
+                        for a,b in resultado:
+                            self.tableWidget.setRowCount(row + 1)
+                            self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
+                            self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
+                            row += 1
+                    else:
+                        blank=QMessageBox()
+                        blank.setIcon(QMessageBox.Information)
+                        blank.setWindowTitle("ADVERTENCIA")
+                        blank.setText("Este artista no tiene información para mostrar")
+                        blank.exec()
                     cur.close()                
             else:
                 blank=QMessageBox()

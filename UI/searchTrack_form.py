@@ -65,6 +65,7 @@ class Ui_searchTrack_form(object):
 
     def buscarCancion(self):
         #Buscar track
+        self.tableWidget.setRowCount(0)
         nombreTrack=self.inputTrack.text()
         conexion = None
         try:
