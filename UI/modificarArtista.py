@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 import psycopg2
+from PyQt5.QtWidgets import QMessageBox
 from config import config
 
 class Ui_ModificarArtista(object):

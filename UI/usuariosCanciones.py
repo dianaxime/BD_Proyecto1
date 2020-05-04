@@ -30,7 +30,7 @@ class Ui_usuariosCanciones(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             # Ejecutamos una consulta
-            cur.execute( "SELECT customer.firstname, COUNT(creador_track.creadorid) FROM creador_track JOIN customer ON customer.customerid=creador_track.creadorid GROUP BY customer.customerid ORDER BY COUNT(creador_track.creadorid) DESC LIMIT 10" )
+            cur.execute( "SELECT customer.firstname, COUNT(creador_track.creadorid) FROM creador_track JOIN customer ON customer.customerid=creador_track.creadorid GROUP BY customer.customerid ORDER BY COUNT(creador_track.creadorid) DESC LIMIT 5" )
             #Insertamos los datos devueltos por la consulta en la tabla
             row = 0
             for a,b in cur.fetchall():

@@ -30,7 +30,7 @@ class Ui_masCanciones(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             # Ejecutamos una consulta
-            cur.execute( "SELECT genre.name, COUNT(*) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY COUNT(*) DESC LIMIT 10" )
+            cur.execute( "SELECT genre.name, COUNT(*) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY COUNT(*) DESC LIMIT 5" )
             #Insertamos los datos devueltos por la consulta en la tabla
             row = 0
             for a,b in cur.fetchall():

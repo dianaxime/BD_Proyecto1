@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'artistasAlbums.ui'
+# Form implementation generated from reading ui file 'artistasGeneros.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -14,8 +14,7 @@ import psycopg2
 from config import config
 from Reportes import *
 
-
-class Ui_artistasAlbums(object):
+class Ui_artistasGeneros(object):
     def conectar(self):
         """ Conexión al servidor de pases de datos PostgreSQL """
         conexion = None
@@ -31,7 +30,13 @@ class Ui_artistasAlbums(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             # Ejecutamos una consulta
-            cur.execute( "SELECT artist.name, COUNT(*) FROM album JOIN artist ON artist.artistid=album.artistid GROUP BY artist.artistid ORDER BY COUNT(*) DESC LIMIT 5" )
+            cur.execute('''SELECT artist.name, COUNT(DISTINCT track.genreid)
+            FROM artist 
+            JOIN album ON album.artistid = artist.artistid
+            JOIN track ON track.albumid = album.albumid 
+            GROUP BY artist.name 
+            ORDER BY COUNT(DISTINCT track.genreid) DESC 
+            LIMIT 5''')
             #Insertamos los datos devueltos por la consulta en la tabla
             row = 0
             for a,b in cur.fetchall():
@@ -58,9 +63,8 @@ class Ui_artistasAlbums(object):
         self.volverButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.volverButton.setObjectName("volverButton")
-        #self.volverButton.clicked.connect(self.openReportes)
         self.titutloLabel = QtWidgets.QLabel(Form)
-        self.titutloLabel.setGeometry(QtCore.QRect(20, 20, 521, 21))
+        self.titutloLabel.setGeometry(QtCore.QRect(20, 10, 521, 41))
         self.titutloLabel.setStyleSheet("color: rgb(236, 236, 236);")
         self.titutloLabel.setObjectName("titutloLabel")
         self.tableWidget = QtWidgets.QTableWidget(Form)
@@ -69,7 +73,7 @@ class Ui_artistasAlbums(object):
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setRowCount(0)
-        nombreColumnas = ("Artista","Cantidad de albums")
+        nombreColumnas = ("Artista","Cantidad de géneros")
         # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
         self.tableWidget.setColumnWidth(0, 240)
@@ -86,21 +90,18 @@ class Ui_artistasAlbums(object):
         Form.hide()
         #self.window.show()
 
-
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Artistas con mas albums", "Artistas con mas albums"))
+        Form.setWindowTitle(_translate("Form", "Form"))
         self.volverButton.setText(_translate("Form", "Volver"))
-        self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Artistas con más álbums</span></p></body></html>"))
+        self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Artistas con más géneros</span></p></body></html>"))
         self.volverButton.clicked.connect(lambda:self.openReportes(Form))
 
-"""if __name__ == "__main__":
+if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_artistasAlbums()
+    ui = Ui_artistasGeneros()
     ui.setupUi(Form)
     Form.show()
-    Form.setWindowTitle("Artistas con mas albums")
     sys.exit(app.exec_())
-"""

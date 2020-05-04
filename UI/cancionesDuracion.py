@@ -30,7 +30,7 @@ class Ui_cancionesDuracion(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             # Ejecutamos una consulta
-            cur.execute( "SELECT artist.name, track.name, track.milliseconds FROM album JOIN track ON track.albumid=album.albumid JOIN artist ON album.artistid=artist.artistid ORDER BY track.milliseconds DESC LIMIT 10 ")
+            cur.execute( "SELECT artist.name, track.name, track.milliseconds FROM album JOIN track ON track.albumid=album.albumid JOIN artist ON album.artistid=artist.artistid ORDER BY track.milliseconds DESC LIMIT 5")
             #Insertamos los datos devueltos por la consulta en la tabla
             row = 0
             for a,b,c in cur.fetchall():
