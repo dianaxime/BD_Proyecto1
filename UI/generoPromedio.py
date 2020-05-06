@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 from Reportes import *
+import csv
 
 class Ui_generoPromedio(object):
     def conectar(self):
@@ -38,7 +39,14 @@ class Ui_generoPromedio(object):
                 self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(str(b)))
                 row += 1
-
+            with open('promedioGeneroConsult.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Género', 'Promedio (ms)'])
+                cur.execute( "SELECT genre.name, AVG(track.milliseconds) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY AVG(track.milliseconds) DESC" )
+                #print (cur.fetchall())
+                for a,b in cur.fetchall():
+                    csv_writer.writerow([a, str(b)])
+                    
             # Cerremos el cursor
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:

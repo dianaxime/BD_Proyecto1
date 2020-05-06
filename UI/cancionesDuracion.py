@@ -12,7 +12,7 @@ from PyQt5.QtGui import QIcon
 import psycopg2
 from config import config
 from Reportes import *
-
+import csv
 
 class Ui_cancionesDuracion(object):
     def conectar(self):
@@ -39,7 +39,15 @@ class Ui_cancionesDuracion(object):
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
                 self.tableWidget.setItem(row, 2, QTableWidgetItem(str(c)))
                 row += 1
-
+            with open('cancionesMayorDuracion.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Artista','Track', 'Duracion (ms)'])
+                cur.execute( "SELECT artist.name, track.name, track.milliseconds FROM album JOIN track ON track.albumid=album.albumid JOIN artist ON album.artistid=artist.artistid ORDER BY track.milliseconds DESC LIMIT 5")
+                row = 0
+                #print (cur.fetchall())
+                for a,b,c in cur.fetchall():
+                    csv_writer.writerow([a, b, str(c)])
+                    row += 1
             # Cerremos el cursor
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:

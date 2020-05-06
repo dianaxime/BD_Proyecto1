@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 from Reportes import *
-
+import csv
 
 class Ui_duracionPlaylist(object):
     def conectar(self):
@@ -34,12 +34,24 @@ class Ui_duracionPlaylist(object):
             cur.execute( "SELECT DISTINCT playlist.name, SUM(track.milliseconds) FROM playlisttrack JOIN track ON track.trackid=playlisttrack.trackid JOIN playlist ON playlist.playlistid=playlisttrack.playlistid GROUP BY playlist.playlistid ORDER BY SUM(track.milliseconds) DESC" )
             #Insertamos los datos devueltos por la consulta en la tabla
             row = 0
+            
+            #print (cur.fetchall())
             for a,b in cur.fetchall():
                 self.tableWidget.setRowCount(row + 1)
                 self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(str(b)))
+                #csv_writer.writerow([a, str(b)])
                 row += 1
 
+            with open('duracionPlaylistConsult.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Playlist', 'Duracion (ms)'])
+                cur.execute( "SELECT DISTINCT playlist.name, SUM(track.milliseconds) FROM playlisttrack JOIN track ON track.trackid=playlisttrack.trackid JOIN playlist ON playlist.playlistid=playlisttrack.playlistid GROUP BY playlist.playlistid ORDER BY SUM(track.milliseconds) DESC" )
+                row = 0
+                #print (cur.fetchall())
+                for a,b in cur.fetchall():
+                    csv_writer.writerow([a, str(b)])
+                    row += 1
             # Cerremos el cursor
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:

@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 from Reportes import *
+import csv
 
 class Ui_masCanciones(object):
     def conectar(self):
@@ -38,7 +39,16 @@ class Ui_masCanciones(object):
                 self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(str(b)))
                 row += 1
-
+            ##escritura a .csv
+            with open('generosMasCanciones.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Género', 'Cantidad'])
+                cur.execute( "SELECT genre.name, COUNT(*) FROM track JOIN genre ON genre.genreid=track.genreid GROUP BY genre.genreid ORDER BY COUNT(*) DESC LIMIT 5" )
+                row = 0
+                #print (cur.fetchall())
+                for a,b in cur.fetchall():
+                    csv_writer.writerow([a, str(b)])
+                    row += 1
             # Cerremos el cursor
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:

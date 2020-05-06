@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 from Reportes import *
-
+import csv
 
 class Ui_artistasAlbums(object):
     def conectar(self):
@@ -39,6 +39,15 @@ class Ui_artistasAlbums(object):
                 self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(str(b)))
                 row += 1
+            with open('artistasMasAlbums.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Artista', 'Cantidad albums'])
+                cur.execute( "SELECT artist.name, COUNT(*) FROM album JOIN artist ON artist.artistid=album.artistid GROUP BY artist.artistid ORDER BY COUNT(*) DESC LIMIT 5" )
+                row = 0
+                #print (cur.fetchall())
+                for a,b in cur.fetchall():
+                    csv_writer.writerow([a, str(b)])
+                    row += 1
 
             # Cerremos el cursor
             cur.close()

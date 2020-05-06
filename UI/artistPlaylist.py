@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 from Reportes import *
-
+import csv
 class Ui_artistPlaylist(object):
     def conectar(self):
         """ Conexión al servidor de pases de datos PostgreSQL """
@@ -45,7 +45,21 @@ class Ui_artistPlaylist(object):
                 self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(str(b)))
                 row += 1
-
+            with open('artistaPorPlaylistConsult.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Playlist', 'Cantidad Artistas'])
+                cur.execute('''SELECT playlist.name, COUNT(DISTINCT artist.name)
+                FROM playlist 
+                JOIN playlisttrack ON playlist.playlistid = playlisttrack.playlistid
+                JOIN track ON playlisttrack.trackid = track.trackid 
+                JOIN album ON track.albumid = album.albumid 
+                JOIN artist ON album .artistid  = artist.artistid
+                GROUP BY playlist.name
+                ORDER BY COUNT(DISTINCT artist.name) DESC ''')
+                #print (cur.fetchall())
+                for a,b in cur.fetchall():
+                    csv_writer.writerow([a, str(b)])
+                    #row += 1
             # Cerremos el cursor
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
