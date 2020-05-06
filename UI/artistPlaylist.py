@@ -45,21 +45,6 @@ class Ui_artistPlaylist(object):
                 self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
                 self.tableWidget.setItem(row, 1, QTableWidgetItem(str(b)))
                 row += 1
-            with open('artistaPorPlaylistConsult.csv', mode='w', newline='') as cvs_file:
-                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                csv_writer.writerow(['Playlist', 'Cantidad Artistas'])
-                cur.execute('''SELECT playlist.name, COUNT(DISTINCT artist.name)
-                FROM playlist 
-                JOIN playlisttrack ON playlist.playlistid = playlisttrack.playlistid
-                JOIN track ON playlisttrack.trackid = track.trackid 
-                JOIN album ON track.albumid = album.albumid 
-                JOIN artist ON album .artistid  = artist.artistid
-                GROUP BY playlist.name
-                ORDER BY COUNT(DISTINCT artist.name) DESC ''')
-                #print (cur.fetchall())
-                for a,b in cur.fetchall():
-                    csv_writer.writerow([a, str(b)])
-                    #row += 1
             # Cerremos el cursor
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -93,6 +78,13 @@ class Ui_artistPlaylist(object):
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
         self.tableWidget.setColumnWidth(0, 240)
         self.tableWidget.setColumnWidth(1, 240)
+        #boton de generar reporte
+        self.reporteButton = QtWidgets.QPushButton(Form)
+        self.reporteButton.setGeometry(QtCore.QRect(400, 410, 75, 23))
+        self.reporteButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.reporteButton.setObjectName("reporteButton")
+        self.reporteButton.clicked.connect(self.generarCsv)
         self.conectar()
 
         self.retranslateUi(Form)
@@ -109,8 +101,45 @@ class Ui_artistPlaylist(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.volverButton.setText(_translate("Form", "Volver"))
+        self.reporteButton.setText(_translate("Form", "CSV"))
         self.titutloLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Artistas por playlist</span></p></body></html>"))
         self.volverButton.clicked.connect(lambda:self.openReportes(Form))
+
+    def generarCsv(self):
+        conexion = None
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+            # Conexion al servidor de PostgreSQL
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            # Ejecución la consulta para obtener la conexión
+            cur.execute('SELECT version()')
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            ##escritura a .csv
+            with open('artistaPorPlaylistConsult.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Playlist', 'Cantidad Artistas'])
+                cur.execute('''SELECT playlist.name, COUNT(DISTINCT artist.name)
+                FROM playlist 
+                JOIN playlisttrack ON playlist.playlistid = playlisttrack.playlistid
+                JOIN track ON playlisttrack.trackid = track.trackid 
+                JOIN album ON track.albumid = album.albumid 
+                JOIN artist ON album .artistid  = artist.artistid
+                GROUP BY playlist.name
+                ORDER BY COUNT(DISTINCT artist.name) DESC ''')
+                #print (cur.fetchall())
+                for a,b in cur.fetchall():
+                    csv_writer.writerow([a, str(b)])
+            # Cerremos el cursor
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
 
 
 if __name__ == "__main__":

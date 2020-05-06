@@ -431,7 +431,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     bienvenidaLabel = QtWidgets.QWidget()
-    ui = Ui_bienvenidaLabel()
+    ui = Ui_bienvenidaLabel(60)
     ui.setupUi(bienvenidaLabel)
     bienvenidaLabel.show()
     bienvenidaLabel.setWindowTitle("Principal")
