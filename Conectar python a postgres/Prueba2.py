@@ -63,8 +63,8 @@ def conectar():
         for a,b in cur.fetchall() :
             print(a,"-",b)
         print("--------------------------------------------------")
-
-
+        cur.execute("""SELECT add_bitacora('maria.nes.vf@gmail.com'::varchar, 'Colores'::varchar, 1::numeric, 2::numeric )""")
+        conexion.commit()
         """nombre="Balls to the Wall"
         cur.execute("SELECT actividad_track.trackid FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.name = %s)",(nombre,))
         IDTrack=cur.fetchall()
