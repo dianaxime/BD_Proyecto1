@@ -16,6 +16,8 @@ from modificarArtista import *
 
 
 class Ui_BuscarArtista(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(342, 216)
@@ -69,7 +71,7 @@ class Ui_BuscarArtista(object):
         conexion=None
         try:
             params = config()
-
+            id=self.id
             #print(params)
             # Conexion al servidor de PostgreSQL
             #print('Conectando a la base de datos PostgreSQL...')

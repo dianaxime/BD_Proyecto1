@@ -125,6 +125,7 @@ class Ui_ModificarAlbum(object):
                 blank.exec()
             else:
                 newArtistid=newArtistid [0][0]
+                #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric )""", (id, nombre))
                 cur.execute('''
                         UPDATE album
                         SET title = %s,

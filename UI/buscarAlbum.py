@@ -16,6 +16,8 @@ from modificarAlbum import *
 
 
 class Ui_BuscarAlbum(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(340, 214)

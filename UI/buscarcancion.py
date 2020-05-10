@@ -15,7 +15,8 @@ from modificarCancion import *
 from PyQt5.QtWidgets import QMessageBox
 
 class Ui_BuscarCancion(object):
-
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(339, 221)

@@ -85,7 +85,7 @@ class Ui_IngresarArtista(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             nombre=self.nombreInput.text()
-
+            id=self.id
             if nombre != '':
                 #Se verifica si ya existe ese artista
                 cur.execute( "SELECT artist.artistid FROM artist WHERE artist.name=%s",(nombre,))
@@ -96,6 +96,7 @@ class Ui_IngresarArtista(object):
                     IDArtist=cur.fetchall()
                     IDoficial=(IDArtist[0][0])
                     IDoficial += 1
+                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 4::numeric )""", (id, nombre))
                     cur.execute("INSERT INTO artist (artistid, name)VALUES (%s, %s)", ( IDoficial, nombre))
                     conexion.commit()
                     cur.execute("SELECT * FROM artist ORDER BY artist.artistid DESC LIMIT 10")

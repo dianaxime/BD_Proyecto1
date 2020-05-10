@@ -97,7 +97,7 @@ class Ui_IngresarAlbum(object):
             db_version = cur.fetchone()
             albumName=self.tituloInput.text()
             artistName=self.artistaInput.text()
-
+            id=self.id
             if (albumName != '' or artistName != ''):
                 #Se verifica si ya existe ese album de ese artista o ese artista
                 cur.execute( "SELECT * FROM album WHERE album.title=%s AND album.artistid IN (SELECT artist.artistid FROM artist WHERE artist.name = %s)",(albumName, artistName,))
@@ -112,6 +112,7 @@ class Ui_IngresarAlbum(object):
                     IDoficial += 1
                     IDoficialArtista=(IDArtist[0][0])
                     cur.execute("INSERT INTO album (albumid, title, artistid) VALUES (%s,%s,%s)", (IDoficial, albumName, IDoficialArtista))
+                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 2::numeric )""", (id, albumName))
                     conexion.commit()
                     cur.execute("SELECT * FROM album ORDER BY album.albumid DESC LIMIT 5")
                     # Recorremos los resultados y los mostramos
