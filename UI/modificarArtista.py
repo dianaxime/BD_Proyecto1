@@ -14,8 +14,9 @@ from PyQt5.QtWidgets import QMessageBox
 from config import config
 
 class Ui_ModificarArtista(object):
-    def __init__(self,id):
+    def __init__(self,id, IDArtO):
         self.id=id
+        self.IDArtO=IDArtO
     def setupUi(self, Form):
 
         conexion=None
@@ -31,7 +32,7 @@ class Ui_ModificarArtista(object):
             # Se obtienen los resultados
             #db_version = cur.fetchone()
             print(self.id)
-            cur.execute( "SELECT artist.name FROM artist WHERE artist.artistid=%s",(self.id,))
+            cur.execute( "SELECT artist.name FROM artist WHERE artist.artistid=%s",(self.IDArtO,))
             nombre=cur.fetchall()[0][0]
             print(nombre)
             
@@ -105,11 +106,13 @@ class Ui_ModificarArtista(object):
             #db_version = cur.fetchone()
             nombre=self.nombreInput.text()
             id=self.id
+            IDArtO=self.IDArtO
             cur.execute('''
                 UPDATE artist
                 SET name = %s
                 WHERE artistid = %s
-                ''',(nombre, id))
+                ''',(nombre, IDArtO))
+            cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 4::numeric )""", (id, nombre))
             conexion.commit()
             addedArtist=QMessageBox()
             addedArtist.setIcon(QMessageBox.Information)

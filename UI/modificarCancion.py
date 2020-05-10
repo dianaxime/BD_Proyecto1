@@ -15,8 +15,9 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 class Ui_ModificarCancion(object):
-    def __init__(self,id):
+    def __init__(self,id, IDArtO):
         self.id=id
+        self.IDArtO=IDArtO
     def setupUi(self, Form):
         conexion=None
         try:
@@ -25,23 +26,23 @@ class Ui_ModificarCancion(object):
             # creación del cursor
             cur = conexion.cursor()
             print(self.id)
-            cur.execute( "SELECT track.name FROM track WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT track.name FROM track WHERE track.trackid=%s",(self.IDArtO,))
             nombre=cur.fetchall()[0][0]
-            cur.execute( "SELECT album.title FROM album JOIN track ON album.albumid=track.albumid WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT album.title FROM album JOIN track ON album.albumid=track.albumid WHERE track.trackid=%s",(self.IDArtO,))
             album=cur.fetchall()[0][0]
-            cur.execute( "SELECT mediatype.name FROM mediatype JOIN track ON mediatype.mediatypeid=track.mediatypeid WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT mediatype.name FROM mediatype JOIN track ON mediatype.mediatypeid=track.mediatypeid WHERE track.trackid=%s",(self.IDArtO,))
             media=cur.fetchall()[0][0]
-            cur.execute( "SELECT genre.name FROM genre JOIN track ON genre.genreid=track.genreid WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT genre.name FROM genre JOIN track ON genre.genreid=track.genreid WHERE track.trackid=%s",(self.IDArtO,))
             genre=cur.fetchall()[0][0]
-            cur.execute( "SELECT track.composer FROM track WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT track.composer FROM track WHERE track.trackid=%s",(self.IDArtO,))
             compositor=cur.fetchall()[0][0]
-            cur.execute( "SELECT track.milliseconds FROM track WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT track.milliseconds FROM track WHERE track.trackid=%s",(self.IDArtO,))
             milli=cur.fetchall()[0][0]
             milli=str(milli)
-            cur.execute( "SELECT track.bytes FROM track WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT track.bytes FROM track WHERE track.trackid=%s",(self.IDArtO,))
             bytesQ=cur.fetchall()[0][0]
             bytesQ=str(bytesQ)
-            cur.execute( "SELECT track.unitprice FROM track WHERE track.trackid=%s",(self.id,))
+            cur.execute( "SELECT track.unitprice FROM track WHERE track.trackid=%s",(self.IDArtO,))
             unitPrice=cur.fetchall()[0][0]
             unitPrice=str(unitPrice)
             print(nombre)
@@ -215,6 +216,7 @@ class Ui_ModificarCancion(object):
             #db_version = cur.fetchone()
             nombre=self.nombreInput.text()
             id=self.id
+            IDArtO=self.IDArtO
             tipo=self.tipoInput.text()
             precio=self.precioInput.text()
             album=self.albumInput.text()
@@ -265,7 +267,8 @@ class Ui_ModificarCancion(object):
                     bytes=%s,
                     unitprice=%s
                     WHERE trackid = %s
-                    ''',(nombre, newAlbumtid, newTipoid,newGeneroid,compositor,duracion,tamano, precio,id))
+                    ''',(nombre, newAlbumtid, newTipoid,newGeneroid,compositor,duracion,tamano, precio,IDArtO))
+                cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 1::numeric )""", (id, nombre))
                 conexion.commit()
                 addedArtist=QMessageBox()
                 addedArtist.setIcon(QMessageBox.Information)

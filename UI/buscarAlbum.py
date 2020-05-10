@@ -16,8 +16,9 @@ from modificarAlbum import *
 
 
 class Ui_BuscarAlbum(object):
-    def __init__(self,id):
+    def __init__(self,id, IDArtO):
         self.id=id
+        self.IDArtO=IDArtO
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(340, 214)
@@ -86,7 +87,7 @@ class Ui_BuscarAlbum(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             nombre=self.nombreInput.text()
-           
+            id=self.id
             if nombre != '' :
                 cur.execute( "SELECT album.albumid FROM album WHERE album.title=%s",(nombre,))
                 IDArtO=cur.fetchall()#[0][0]
@@ -100,8 +101,8 @@ class Ui_BuscarAlbum(object):
                     IDArtO=IDArtO[0][0]
                     print(IDArtO)
                     self.window = QtWidgets.QWidget()
-                    self.id=IDArtO
-                    self.ui =Ui_ModificarAlbum(self.id)
+                    #self.id=IDArtO
+                    self.ui =Ui_ModificarAlbum(self.id, IDArtO)
                     self.ui.setupUi(self.window)
                     #LogIn.hide()
                     self.window.show()

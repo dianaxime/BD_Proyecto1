@@ -101,8 +101,8 @@ class Ui_BuscarArtista(object):
                     IDArtO=IDArtO[0][0]
                     print(IDArtO)
                     self.window = QtWidgets.QWidget()
-                    self.id=IDArtO
-                    self.ui = Ui_ModificarArtista(self.id)
+                    #self.id=IDArtO
+                    self.ui = Ui_ModificarArtista(self.id,IDArtO )
                     self.ui.setupUi(self.window)
                     #LogIn.hide()
                     self.window.show()

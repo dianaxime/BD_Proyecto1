@@ -14,8 +14,11 @@ from config import config
 from PyQt5.QtWidgets import QMessageBox
 
 class Ui_ModificarAlbum(object):
-    def __init__(self,id):
+    def __init__(self,id, IDArtO):
         self.id=id
+        self.IDArtO=IDArtO
+        """print("este es id user: "+str(id))
+        print("este es id album: "+str(IDArtO))"""
     def setupUi(self, Form):
         conexion=None
         try:
@@ -23,10 +26,10 @@ class Ui_ModificarAlbum(object):
             conexion = psycopg2.connect(**params)
             # creación del cursor
             cur = conexion.cursor()
-            print(self.id)
-            cur.execute( "SELECT album.title FROM album WHERE album.albumid=%s",(self.id,))
+            print("este si es album "+str(self.IDArtO))
+            cur.execute( "SELECT album.title FROM album WHERE album.albumid=%s",(self.IDArtO,))
             nombre=cur.fetchall()[0][0]
-            cur.execute( "SELECT artist.name FROM artist JOIN album ON album.artistid=artist.artistid WHERE album.albumid=%s",(self.id,))
+            cur.execute( "SELECT artist.name FROM artist JOIN album ON album.artistid=artist.artistid WHERE album.albumid=%s",(self.IDArtO,))
             artista=cur.fetchall()[0][0]
             print(nombre)
             print(artista)
@@ -114,6 +117,10 @@ class Ui_ModificarAlbum(object):
             #db_version = cur.fetchone()
             nombre=self.tituloInput.text()
             id=self.id
+            IDArtO=self.IDArtO
+            print ("--------adentro de funcion-----------")
+            print("este es id user: "+str(id))
+            print("este es id album: "+str(IDArtO))
             artista=self.artistaInput.text()
             cur.execute( "SELECT artist.artistid FROM artist WHERE artist.name=%s",(artista,))
             newArtistid=cur.fetchall()
@@ -131,7 +138,8 @@ class Ui_ModificarAlbum(object):
                         SET title = %s,
                             artistid=%s
                         WHERE albumid = %s
-                        ''',(nombre, newArtistid, id))
+                        ''',(nombre, newArtistid, IDArtO))
+                cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 2::numeric )""", (id, nombre))
                 conexion.commit()
                 print("Lo edito")
                 addedArtist=QMessageBox()
