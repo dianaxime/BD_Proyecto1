@@ -15,6 +15,8 @@ from config import config
 
 
 class Ui_IngresarArtista(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(333, 222)

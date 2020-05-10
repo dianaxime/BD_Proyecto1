@@ -17,6 +17,8 @@ from config import config
 class Ui_IngresarCancion(object):
     def __init__(self,id):
         self.id=id
+    def __init__(self,id):
+        self.id=id
         print("este es el id del registrador "+str(id))
     def setupUi(self, Form):
         Form.setObjectName("Form")

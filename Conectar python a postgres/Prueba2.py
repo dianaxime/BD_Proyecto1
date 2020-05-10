@@ -63,8 +63,18 @@ def conectar():
         for a,b in cur.fetchall() :
             print(a,"-",b)
         print("--------------------------------------------------")
-        cur.execute("""SELECT add_bitacora('maria.nes.vf@gmail.com'::varchar, 'Colores'::varchar, 1::numeric, 2::numeric )""")
-        conexion.commit()
+        #cur.execute("""SELECT add_bitacora(61::numeric, 'SI FUNCIONA'::varchar, 1::numeric, 2::numeric ) FROM track WHERE track.name='Evil Dick'""")
+        #conexion.commit()
+        #cur.execute("SELECT track.name FROM track WHERE track.albumid = '{0}'".format(36))
+        #for a in cur.fetchall() :
+           # print (a[0])
+           # cur.execute("""SELECT add_bitacora(61::numeric, 'for prueba'::varchar, 1::numeric, 2::numeric ) FROM track WHERE track.name='Evil Dick'""")
+        #conexion.commit()
+        cur.execute("SELECT track.name FROM track WHERE track.albumid = '{0}'".format(36))
+        tracks=cur.fetchall()
+        for a in tracks :
+            print (a[0])
+            cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric ) """, (61, str(a[0]))) 
         """nombre="Balls to the Wall"
         cur.execute("SELECT actividad_track.trackid FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.name = %s)",(nombre,))
         IDTrack=cur.fetchall()

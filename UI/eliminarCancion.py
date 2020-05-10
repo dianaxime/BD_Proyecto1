@@ -15,6 +15,8 @@ from config import config
 
 
 class Ui_EliminarCancion(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(337, 230)
@@ -83,7 +85,7 @@ class Ui_EliminarCancion(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             nombre=self.nombreInput.text()
-
+            id=self.id
             if nombre != '':
                 #Se verifica que exista esa cancion
                 cur.execute("SELECT track.trackid FROM track WHERE track.name = '{0}'".format(nombre))
@@ -91,12 +93,14 @@ class Ui_EliminarCancion(object):
                 if(len(IDTrack)!=0):
                     #Si si existe se borra
                     IDoficial=(IDTrack[0][0])
+
                     cur.execute("DELETE FROM creador_track WHERE creador_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM creador_track WHERE creador_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM track WHERE track.trackid = %s",(IDoficial,))
+                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric )""", (id, nombre))
                     conexion.commit()
                     cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
                     # Recorremos los resultados y los mostramos

@@ -15,6 +15,8 @@ from config import config
 
 
 class Ui_EliminarAlbum(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(339, 230)
@@ -83,7 +85,7 @@ class Ui_EliminarAlbum(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             nombre=self.nombreInput.text()
-
+            id=self.id
             if nombre != '':
                 #Se verifica que exista ese album
                 cur.execute("SELECT album.albumid FROM album WHERE album.title = '{0}'".format(nombre))
@@ -95,8 +97,16 @@ class Ui_EliminarAlbum(object):
                     cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
                     cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
                     cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.albumid = %s)",(IDoficial,))
+                    print ("Ya va a llegar")
+                    cur.execute("SELECT track.name FROM track WHERE track.albumid = '{0}'".format(IDoficial))
+                    tracks=cur.fetchall()
+                    for a in tracks :
+                        print (a[0])
+                        cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric ) """, (id, a[0])) 
+                    print ("Sí llego")
                     cur.execute("DELETE FROM track WHERE track.albumid = %s",(IDoficial,))
                     cur.execute("DELETE FROM album WHERE album.title = '{0}'".format(nombre))
+                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 2::numeric )""", (id, nombre))
                     conexion.commit()
                     cur.execute("SELECT * FROM album ORDER BY album.albumid ASC LIMIT 10")
                     # Recorremos los resultados y los mostramos

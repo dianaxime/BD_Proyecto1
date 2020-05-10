@@ -14,6 +14,8 @@ import psycopg2
 from config import config
 
 class Ui_IngresarAlbum(object):
+    def __init__(self,id):
+        self.id=id
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(335, 252)

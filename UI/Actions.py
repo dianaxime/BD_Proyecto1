@@ -221,13 +221,13 @@ class Ui_bienvenidaLabel(object):
                         self.window.show()
                 elif self.artistaRegistrar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_IngresarArtista()
+                        self.ui = Ui_IngresarArtista(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
                 elif self.albumRegistrar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_IngresarAlbum()
+                        self.ui = Ui_IngresarAlbum(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
@@ -267,19 +267,19 @@ class Ui_bienvenidaLabel(object):
             if permisoModificar:
                 if self.cancionModificar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_BuscarCancion()
+                        self.ui = Ui_BuscarCancion(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
                 elif self.artistaModificar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_BuscarArtista()
+                        self.ui = Ui_BuscarArtista(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
                 elif self.albumModificar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_BuscarAlbum()
+                        self.ui = Ui_BuscarAlbum(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
@@ -319,19 +319,19 @@ class Ui_bienvenidaLabel(object):
             if permisoEliminar:
                 if self.cancionEliminar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_EliminarCancion()
+                        self.ui = Ui_EliminarCancion(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
                 elif self.artistaEliminar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_EliminarArtista()
+                        self.ui = Ui_EliminarArtista(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
                 elif self.albumEliminar.isChecked() == True:
                         self.window = QtWidgets.QWidget()
-                        self.ui = Ui_EliminarAlbum()
+                        self.ui = Ui_EliminarAlbum(self.id)
                         self.ui.setupUi(self.window)
                         #bienvenidaLabel.hide()
                         self.window.show()
