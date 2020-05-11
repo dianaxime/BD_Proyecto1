@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from buscarUsuario import *
+from bitacora import *
 from Reportes import *
 import sys
 
@@ -17,7 +18,7 @@ import sys
 class Ui_adminActions(object):
     def setupUi(self, adminActions):
         adminActions.setObjectName("adminActions")
-        adminActions.resize(298, 291)
+        adminActions.resize(310, 350)
         adminActions.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
         adminActions.setWindowIcon(QIcon('icono.png'))
@@ -31,6 +32,7 @@ class Ui_adminActions(object):
         self.actionsAdmin.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.actionsAdmin.setObjectName("actionsAdmin")
+
         self.modificar = QtWidgets.QPushButton(adminActions)
         self.modificar.setGeometry(QtCore.QRect(40, 110, 231, 41))
         font = QtGui.QFont()
@@ -45,8 +47,22 @@ class Ui_adminActions(object):
         self.label.setGeometry(QtCore.QRect(20, 30, 261, 41))
         self.label.setObjectName("label")
 
+        self.bitacora = QtWidgets.QPushButton(adminActions)
+        self.bitacora.setGeometry(QtCore.QRect(40, 230, 231, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.bitacora.setFont(font)
+        self.bitacora.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.bitacora.setObjectName("bitacora")
+        self.label = QtWidgets.QLabel(adminActions)
+        self.label.setGeometry(QtCore.QRect(20, 30, 261, 41))
+        self.label.setObjectName("label")
+
         self.salir = QtWidgets.QPushButton(adminActions)
-        self.salir.setGeometry(QtCore.QRect(40, 230, 231, 41))
+        self.salir.setGeometry(QtCore.QRect(40, 290, 231, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -73,6 +89,13 @@ class Ui_adminActions(object):
         #Form.hide()
         self.window.show()
 
+    def goBitacora(self, Form):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_Bitacora()
+        self.ui.setupUi(self.window)
+        #Form.hide()
+        self.window.show()
+
     def goOut(self, Form):
         #self.window = QtWidgets.QWidget()
         #self.ui = Ui_buscarUsuario()
@@ -86,10 +109,12 @@ class Ui_adminActions(object):
         adminActions.setWindowTitle(_translate("adminActions", "Acciones administrador"))
         self.actionsAdmin.setText(_translate("adminActions", "Reportes"))
         self.modificar.setText(_translate("adminActions", "Activar/Desactivar Usuarios"))
+        self.bitacora.setText(_translate("adminActions", "Bitacora"))
         self.salir.setText(_translate("adminActions", "Salir"))
         self.label.setText(_translate("adminActions", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt; font-weight:600;\">Bienvenido</span></p></body></html>"))
         self.actionsAdmin.clicked.connect(lambda:self.goReportes(adminActions))
         self.modificar.clicked.connect(lambda:self.goPermisos(adminActions))
+        self.bitacora.clicked.connect(lambda:self.goBitacora(adminActions))
         self.salir.clicked.connect(lambda:self.goOut(adminActions))
 
 
