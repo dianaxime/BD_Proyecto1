@@ -2,7 +2,7 @@ import pymongo
 from datetime import datetime, timedelta
 #conectar a mongo
 conexion=pymongo.MongoClient() 
-db=conexion.Proyecto
+db=conexion.proyectoBD
 coleccion=db.carrito
 
 def add_item_to_cart(customer_id, track_id, unit_price):
