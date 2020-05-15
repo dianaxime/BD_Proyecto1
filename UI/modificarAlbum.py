@@ -136,10 +136,11 @@ class Ui_ModificarAlbum(object):
                 cur.execute('''
                         UPDATE album
                         SET title = %s,
-                            artistid=%s
+                            artistid=%s,
+                            u_updated=%s
                         WHERE albumid = %s
-                        ''',(nombre, newArtistid, IDArtO))
-                cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 2::numeric )""", (id, nombre))
+                        ''',(nombre, newArtistid,id, IDArtO))
+                #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 2::numeric )""", (id, nombre))
                 conexion.commit()
                 print("Lo edito")
                 addedArtist=QMessageBox()

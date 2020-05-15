@@ -234,12 +234,12 @@ class Ui_IngresarCancion(object):
                     cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
                     cur.execute("INSERT INTO creador_track (relacionid, creadorid, trackid) VALUES (%s, %s, %s)", (IDoficialRel, idRegistrador, IDoficial,))
                     conexion.commit()
-                    cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
+                    """cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
                     # Recorremos los resultados y los mostramos
                     for a,b,c,d,e,f,g,h,i,j in cur.fetchall() :
                             print(a,b,c,d,e,f,g,h,i,j)
 
-                    print("--------------------------------------------------")
+                    print("--------------------------------------------------")"""
                     addedSong=QMessageBox()
                     addedSong.setIcon(QMessageBox.Information)
                     addedSong.setWindowTitle("Listo")

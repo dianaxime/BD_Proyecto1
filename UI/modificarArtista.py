@@ -109,10 +109,11 @@ class Ui_ModificarArtista(object):
             IDArtO=self.IDArtO
             cur.execute('''
                 UPDATE artist
-                SET name = %s
+                SET name = %s,
+                u_updated=%s
                 WHERE artistid = %s
-                ''',(nombre, IDArtO))
-            cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 4::numeric )""", (id, nombre))
+                ''',(nombre, id, IDArtO))
+            #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 4::numeric )""", (id, nombre))
             conexion.commit()
             addedArtist=QMessageBox()
             addedArtist.setIcon(QMessageBox.Information)

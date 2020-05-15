@@ -79,7 +79,7 @@ class Ui_EliminarArtista(object):
             # Ejecución la consulta para obtener la conexión
             print('La version de PostgreSQL es la:')
             cur.execute('SELECT version()')
-
+            #print("hola1")
             # Se obtienen los resultados
             db_version = cur.fetchone()
             nombre=self.nombreInput.text()
@@ -90,6 +90,7 @@ class Ui_EliminarArtista(object):
                 IDArtist=cur.fetchall()
                 if(len(IDArtist)!=0):
                     #Si si existe se obtine el ID y se borra 
+                    #print("hola2")
                     IDoficial=(IDArtist[0][0])
                     cur.execute("DELETE FROM creador_track WHERE creador_track.trackid IN (SELECT track.trackid FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s))",(IDoficial,))
                     cur.execute("DELETE FROM playlisttrack WHERE playlisttrack.trackid IN (SELECT track.trackid FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s))",(IDoficial,))
@@ -101,24 +102,31 @@ class Ui_EliminarArtista(object):
                     #for a in tracks :
                       #  print (a[0])
                        # cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric ) """, (id, a[0])) 
-                    
+                    #print("hola3")
+                    cur.execute("""UPDATE track set u_deleted=%s, u_updated=%s WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)""", (id, id, IDoficial,))
                     cur.execute("DELETE FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)",(IDoficial,))
+                    #print("hola1")
                     ##agregar a bitacora albums eliminados de artista
-                    cur.execute("SELECT album.title FROM album WHERE album.artistid = '{0}'".format(IDoficial))
-                    albums=cur.fetchall()
-                    for a in albums :
-                        print (a[0])
-                        cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 2::numeric ) """, (id, a[0])) 
+                    #cur.execute("SELECT album.title FROM album WHERE album.artistid = '{0}'".format(IDoficial))
+                    #albums=cur.fetchall()
+                    #for a in albums :
+                      #  print (a[0])
+                       # cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 2::numeric ) """, (id, a[0])) 
+                    cur.execute("""UPDATE album set u_deleted=%s, u_updated=%s WHERE album.artistid = %s""", (id, id,IDoficial,))
                     cur.execute("DELETE FROM album WHERE album.artistid = '{0}'".format(IDoficial))
                     ##agregar a bitacora artista eliminado
-                    cur.execute("""UPDATE artist set u_deleted=%s where artistid=%s;""", (id, IDoficial))
-                    cur.execute("DELETE FROM artist WHERE artist.artistid = '{0}'".format(IDoficial))
+                    #print("hola2")
+                    cur.execute("""UPDATE artist set u_deleted=%s, u_updated=%s where artistid=%s""", (id, id, IDoficial,))
+                    #print("hola3")
+                    #conexion.commit()
+                    cur.execute("DELETE FROM artist WHERE artist.artistid = '{0}'".format(IDoficial,))
+                    #print("hola4")
                     conexion.commit()
                     cur.execute("SELECT * FROM artist ORDER BY artist.artistid ASC LIMIT 10")
                     # Recorremos los resultados y los mostramos
-                    for a,b in cur.fetchall() :
+                    """for a,b in cur.fetchall() :
                             print(a,b)
-                    print("--------------------------------------------------")
+                    print("--------------------------------------------------")"""
                     addedSong=QMessageBox()
                     addedSong.setIcon(QMessageBox.Information)
                     addedSong.setWindowTitle("Listo")

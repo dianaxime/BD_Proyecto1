@@ -99,15 +99,16 @@ class Ui_EliminarCancion(object):
                     cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid = %s",(IDoficial,))
                     cur.execute("DELETE FROM creador_track WHERE creador_track.trackid = %s",(IDoficial,))
+                    cur.execute("""UPDATE track set u_deleted=%s, u_updated=%s WHERE track.trackid = %s""", (id,id,IDoficial))
                     cur.execute("DELETE FROM track WHERE track.trackid = %s",(IDoficial,))
-                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric )""", (id, nombre))
+                    #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric )""", (id, nombre))
                     conexion.commit()
-                    cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
+                    """cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
                     # Recorremos los resultados y los mostramos
                     for a,b,c,d,e,f,g,h,i in cur.fetchall() :
                             print(a,b,c,d,e,f,g,h,i)
 
-                    print("--------------------------------------------------")
+                    print("--------------------------------------------------")"""
                     addedSong=QMessageBox()
                     addedSong.setIcon(QMessageBox.Information)
                     addedSong.setWindowTitle("Listo")

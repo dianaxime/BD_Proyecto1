@@ -116,9 +116,9 @@ class Ui_IngresarAlbum(object):
                     conexion.commit()
                     cur.execute("SELECT * FROM album ORDER BY album.albumid DESC LIMIT 5")
                     # Recorremos los resultados y los mostramos
-                    for a,b,c,d in cur.fetchall() :
+                    """for a,b,c,d in cur.fetchall() :
                         print(a,b,c,d)
-                    print("--------------------------------------------------")
+                    print("--------------------------------------------------")"""
                     addedArtist=QMessageBox()
                     addedArtist.setIcon(QMessageBox.Information)
                     addedArtist.setWindowTitle("Listo")

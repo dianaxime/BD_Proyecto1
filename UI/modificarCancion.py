@@ -265,10 +265,11 @@ class Ui_ModificarCancion(object):
                     composer=%s,
                     milliseconds=%s,
                     bytes=%s,
-                    unitprice=%s
+                    unitprice=%s,
+                    u_updated=%s
                     WHERE trackid = %s
-                    ''',(nombre, newAlbumtid, newTipoid,newGeneroid,compositor,duracion,tamano, precio,IDArtO))
-                cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 1::numeric )""", (id, nombre))
+                    ''',(nombre, newAlbumtid, newTipoid,newGeneroid,compositor,duracion,tamano, precio,id ,IDArtO))
+                #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 2::numeric, 1::numeric )""", (id, nombre))
                 conexion.commit()
                 addedArtist=QMessageBox()
                 addedArtist.setIcon(QMessageBox.Information)
