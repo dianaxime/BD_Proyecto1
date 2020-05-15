@@ -96,11 +96,12 @@ class Ui_EliminarArtista(object):
                     cur.execute("DELETE FROM invoiceline WHERE invoiceline.trackid IN (SELECT track.trackid FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s))",(IDoficial,))
                     cur.execute("DELETE FROM actividad_track WHERE actividad_track.trackid IN (SELECT track.trackid FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s))",(IDoficial,))
                     ##agregar canciones de artisya eliminado
-                    cur.execute("SELECT track.name FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)",(IDoficial,))
-                    tracks=cur.fetchall()
-                    for a in tracks :
-                        print (a[0])
-                        cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric ) """, (id, a[0])) 
+                    #cur.execute("SELECT track.name FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)",(IDoficial,))
+                    #tracks=cur.fetchall()
+                    #for a in tracks :
+                      #  print (a[0])
+                       # cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 1::numeric ) """, (id, a[0])) 
+                    
                     cur.execute("DELETE FROM track WHERE track.albumid IN (SELECT album.albumid FROM album WHERE album.artistid = %s)",(IDoficial,))
                     ##agregar a bitacora albums eliminados de artista
                     cur.execute("SELECT album.title FROM album WHERE album.artistid = '{0}'".format(IDoficial))
@@ -110,7 +111,7 @@ class Ui_EliminarArtista(object):
                         cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 2::numeric ) """, (id, a[0])) 
                     cur.execute("DELETE FROM album WHERE album.artistid = '{0}'".format(IDoficial))
                     ##agregar a bitacora artista eliminado
-                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 3::numeric, 4::numeric )""", (id, nombre))
+                    cur.execute("""UPDATE artist set u_deleted=%s where artistid=%s;""", (id, IDoficial))
                     cur.execute("DELETE FROM artist WHERE artist.artistid = '{0}'".format(IDoficial))
                     conexion.commit()
                     cur.execute("SELECT * FROM artist ORDER BY artist.artistid ASC LIMIT 10")

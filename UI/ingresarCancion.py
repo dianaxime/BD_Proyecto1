@@ -17,9 +17,9 @@ from config import config
 class Ui_IngresarCancion(object):
     def __init__(self,id):
         self.id=id
-    def __init__(self,id):
+    """def __init__(self,id):
         self.id=id
-        print("este es el id del registrador "+str(id))
+        print("este es el id del registrador "+str(id))"""
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(353, 498)
@@ -229,15 +229,15 @@ class Ui_IngresarCancion(object):
                     
                     IDGenreOficial=(IDGenre[0][0])
                     #Se agrega a la DB
-                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 1::numeric )""", (idRegistrador, nombre))
-                    cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio,))
+                    #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 1::numeric )""", (idRegistrador, nombre))
+                    cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice, u_added) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio, idRegistrador,))
                     cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
                     cur.execute("INSERT INTO creador_track (relacionid, creadorid, trackid) VALUES (%s, %s, %s)", (IDoficialRel, idRegistrador, IDoficial,))
                     conexion.commit()
                     cur.execute("SELECT * FROM track ORDER BY track.trackid DESC LIMIT 10")
                     # Recorremos los resultados y los mostramos
-                    for a,b,c,d,e,f,g,h,i in cur.fetchall() :
-                            print(a,b,c,d,e,f,g,h,i)
+                    for a,b,c,d,e,f,g,h,i,j in cur.fetchall() :
+                            print(a,b,c,d,e,f,g,h,i,j)
 
                     print("--------------------------------------------------")
                     addedSong=QMessageBox()

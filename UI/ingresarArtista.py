@@ -96,13 +96,13 @@ class Ui_IngresarArtista(object):
                     IDArtist=cur.fetchall()
                     IDoficial=(IDArtist[0][0])
                     IDoficial += 1
-                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 4::numeric )""", (id, nombre))
-                    cur.execute("INSERT INTO artist (artistid, name)VALUES (%s, %s)", ( IDoficial, nombre))
+                    #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 4::numeric )""", (id, nombre))
+                    cur.execute("INSERT INTO artist (artistid, name, u_added)VALUES (%s, %s, %s)", ( IDoficial, nombre, id))
                     conexion.commit()
                     cur.execute("SELECT * FROM artist ORDER BY artist.artistid DESC LIMIT 10")
                     # Recorremos los resultados y los mostramos
-                    for a,b in cur.fetchall() :
-                        print(a,b)
+                    for a,b,c in cur.fetchall() :
+                        print(a,b,c)
                     print("--------------------------------------------------")
                     addedArtist=QMessageBox()
                     addedArtist.setIcon(QMessageBox.Information)

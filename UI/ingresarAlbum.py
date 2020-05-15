@@ -111,13 +111,13 @@ class Ui_IngresarAlbum(object):
                     IDoficial=(IDAlbum[0][0])
                     IDoficial += 1
                     IDoficialArtista=(IDArtist[0][0])
-                    cur.execute("INSERT INTO album (albumid, title, artistid) VALUES (%s,%s,%s)", (IDoficial, albumName, IDoficialArtista))
-                    cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 2::numeric )""", (id, albumName))
+                    cur.execute("INSERT INTO album (albumid, title, artistid, u_added) VALUES (%s,%s,%s,%s)", (IDoficial, albumName, IDoficialArtista, id))
+                    #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 2::numeric )""", (id, albumName))
                     conexion.commit()
                     cur.execute("SELECT * FROM album ORDER BY album.albumid DESC LIMIT 5")
                     # Recorremos los resultados y los mostramos
-                    for a,b,c in cur.fetchall() :
-                        print(a,b,c)
+                    for a,b,c,d in cur.fetchall() :
+                        print(a,b,c,d)
                     print("--------------------------------------------------")
                     addedArtist=QMessageBox()
                     addedArtist.setIcon(QMessageBox.Information)
