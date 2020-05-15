@@ -23,6 +23,7 @@ from inactivarCancion import Ui_InactivarCancion
 from searchArtist_form import Ui_searchArtist_form
 from searchAlbum_form import Ui_searchAlbum_form
 from searchTrack_form import Ui_searchTrack_form
+from misCanciones import Ui_MisCanciones
 import psycopg2
 from config import config
 import sys
@@ -66,20 +67,6 @@ class Ui_bienvenidaLabel(object):
         self.artistaRegistrar.setGeometry(QtCore.QRect(20, 100, 82, 17))
         self.artistaRegistrar.setObjectName("artistaRegistrar")
         self.registrarBoton.clicked.connect(self.openRegistrar)
-        # GROUP BOX Inactivar
-        self.inactivarGrupo = QtWidgets.QGroupBox(bienvenidaLabel)
-        self.inactivarGrupo.setGeometry(QtCore.QRect(170, 290, 121, 180))
-        self.inactivarGrupo.setStyleSheet("color: rgb(236, 236, 236);")
-        self.inactivarGrupo.setObjectName("inactivarGrupo")
-        self.cancionInactivar = QtWidgets.QRadioButton(self.inactivarGrupo)
-        self.cancionInactivar.setGeometry(QtCore.QRect(20, 30, 82, 17))
-        self.cancionInactivar.setObjectName("cancionInactivar")
-        self.inactivarBoton = QtWidgets.QPushButton(self.inactivarGrupo)
-        self.inactivarBoton.setGeometry(QtCore.QRect(25, 130, 75, 31))
-        self.inactivarBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
-"color: rgb(72, 72, 72);")
-        self.inactivarBoton.setObjectName("inactivarBoton")
-        self.inactivarBoton.clicked.connect(self.openInactivar)
         # GROUP BOX MODIFICAR
         self.modificarGrupo = QtWidgets.QGroupBox(bienvenidaLabel)
         self.modificarGrupo.setGeometry(QtCore.QRect(170, 100, 121, 181))
@@ -130,7 +117,7 @@ class Ui_bienvenidaLabel(object):
         self.buscarBoton.setGeometry(QtCore.QRect(25, 130, 75, 31))
         self.buscarBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
-        self.registrarBoton.setObjectName("registrarBoton")
+        self.buscarBoton.setObjectName("registrarBoton")
         self.cancionBuscar = QtWidgets.QRadioButton(self.buscarGrupo)
         self.cancionBuscar.setGeometry(QtCore.QRect(20, 40, 82, 17))
         self.cancionBuscar.setObjectName("cancionBuscar")
@@ -141,7 +128,44 @@ class Ui_bienvenidaLabel(object):
         self.artistaBuscar.setGeometry(QtCore.QRect(20, 100, 82, 17))
         self.artistaBuscar.setObjectName("artistaBuscar")
         self.buscarBoton.clicked.connect(self.openBuscar)
+        # GROUP BOX Inactivar
+        self.inactivarGrupo = QtWidgets.QGroupBox(bienvenidaLabel)
+        self.inactivarGrupo.setGeometry(QtCore.QRect(170, 290, 121, 180))
+        self.inactivarGrupo.setStyleSheet("color: rgb(236, 236, 236);")
+        self.inactivarGrupo.setObjectName("inactivarGrupo")
+        self.cancionInactivar = QtWidgets.QRadioButton(self.inactivarGrupo)
+        self.cancionInactivar.setGeometry(QtCore.QRect(20, 30, 82, 17))
+        self.cancionInactivar.setObjectName("cancionInactivar")
+        self.inactivarBoton = QtWidgets.QPushButton(self.inactivarGrupo)
+        self.inactivarBoton.setGeometry(QtCore.QRect(25, 130, 75, 31))
+        self.inactivarBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.inactivarBoton.setObjectName("inactivarBoton")
+        self.inactivarBoton.clicked.connect(self.openInactivar)
+        #GROUP BOX mis canciones
+        self.misCancionesGrupo = QtWidgets.QGroupBox(bienvenidaLabel)
+        self.misCancionesGrupo.setGeometry(QtCore.QRect(310, 290, 121, 180))
+        self.misCancionesGrupo.setStyleSheet("color: rgb(236, 236, 236);")
+        self.misCancionesGrupo.setObjectName("misCancionesGrupo")
+        self.misCancionesBoton = QtWidgets.QPushButton(self.misCancionesGrupo)
+        self.misCancionesBoton.setGeometry(QtCore.QRect(25, 130, 75, 31))
+        self.misCancionesBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.misCancionesBoton.setObjectName("misCancionesBoton")
+        self.misCancionesBoton.clicked.connect(self.openMisCanciones)
+        self.misCancionesLabel = QtWidgets.QLabel(bienvenidaLabel)
+        self.misCancionesLabel.setObjectName("misCancionesLabel")
+        self.misCancionesLabel.setGeometry(QtCore.QRect(320, 320, 100, 100))
+        font = QtGui.QFont()
+        font.setPointSize(8)
+        font.setBold(False)
+        font.setWeight(40)
+        self.misCancionesLabel.setFont(font)
+        self.misCancionesLabel.setStyleSheet("color: rgb(236, 236, 236);")
+        self.misCancionesLabel.setObjectName("label")
 
+
+        #Salir
         self.salir = QtWidgets.QPushButton(bienvenidaLabel)
         self.salir.setGeometry(QtCore.QRect(115, 500, 231, 41))
         font = QtGui.QFont()
@@ -198,6 +222,10 @@ class Ui_bienvenidaLabel(object):
         self.artistaEliminar.setText(_translate("bienvenidaLabel", "Artista"))
         self.salir.setText(_translate("bienvenidaLabel", "Salir"))
         self.salir.clicked.connect(lambda:self.goOut(bienvenidaLabel))
+        # GROUP BOX MIS CANCIONES
+        self.misCancionesGrupo.setTitle(_translate("bienvenidaLabel", "Mis canciones"))
+        self.misCancionesBoton.setText(_translate("bienvenidaLabel", "Mis canciones"))
+        self.misCancionesLabel.setText(_translate("bienvenidaLabel", "Puedes ver tus\ntracks reproducidas\ny compradas"))
 
     
     def openRegistrar(self):
@@ -425,6 +453,16 @@ class Ui_bienvenidaLabel(object):
             blank.setWindowTitle("INCOMPLETO")
             blank.setText("Por favor selecciona una opcion de modificacion")
             blank.exec()
+
+    def openMisCanciones(self):
+        #Se verifica cual esta seleccionado
+        id=self.id
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_MisCanciones()
+        self.ui.setupUi(self.window)
+        #bienvenidaLabel.hide()
+        self.window.show()
+        
 
 
 if __name__ == "__main__":
