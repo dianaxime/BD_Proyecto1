@@ -1,11 +1,12 @@
 import pymongo
 import psycopg2
 from config import config
+import datetime
 
 #conectar a mongo
 conexion=pymongo.MongoClient() 
 db=conexion.proyectoBD
-coleccion=db.carrito
+coleccion=db.recomendaciones
 
 
 def conectar():
@@ -28,7 +29,8 @@ def conectar():
         db_version = cur.fetchone()
         # Se muestra la versión por pantalla
         print(db_version)
-        cur.execute('''SELECT customer.email, genre.name
+        #cur.execute(
+        '''SELECT customer.email, genre.name
         	FROM creador_track
         	JOIN customer ON customer.customerid = creador_track.creadorid
         	JOIN track ON creador_track.trackid = track.trackid 
@@ -40,11 +42,49 @@ def conectar():
         	ORDER BY COUNT(creador_track.creadorid) DESC LIMIT 10)
         	GROUP BY customer.email, genre.genreid
         	ORDER BY customer.email DESC
-        	''')
+        	'''
+        #)
+        fecha = '2009-01-01'
+        ahora = datetime.datetime.utcnow()
+        tiempo = ahora - datetime.timedelta(days=7)
+        cur.execute('''
+        	SELECT customer.email, track."name", 
+			genre."name" as genre, invoice.invoicedate
+			FROM invoice
+			JOIN invoiceline ON invoiceline.invoiceid = invoice.invoiceid
+			join track on invoiceline.trackid = track.trackid
+			join genre on track.genreid = genre.genreid
+			join customer on customer.customerid = invoice.customerid
+			where invoice.invoicedate = %s
+		''',(fecha,))
         # Recorremos los resultados y los mostramos
-        for a,b in cur.fetchall() :
-                print(a,b)
-
+        compras = cur.fetchall()
+        for email, cancion, genero, fechac in compras:
+            print(email, cancion, genero, fechac)
+            cur.execute('''
+            	SELECT DISTINCT(track."name"), genre."name"
+            	FROM bitacora
+            	JOIN track ON bitacora.nombre_object = track."name"
+            	JOIN genre ON track.genreid = genre.genreid
+            	WHERE bitacora.nombre_object <> %s
+            	AND bitacora.email <> %s 
+            	AND bitacora.date_on > %s
+            	AND bitacora.date_on < %s
+            	AND bitacora.accion = %s
+            ''',(cancion, email, tiempo, ahora, 'add'))
+            resul = cur.fetchall()
+            for a, b in resul:
+            	print(a, b)
+            	if (coleccion.find({'_id': email}).count() > 0):
+            		if (coleccion.find({'_id': email}, {'sells': {'track': cancion, 'genre': genero}}).count()> 0):
+            			print("no hace nada")
+            		else:
+            			print("si hace algo")
+            		result = coleccion.update({'_id': email }, { '$set': { 'modified': ahora },'$push': { 'sells': {'email': email, 'track': cancion, 'genre': genero, 'date': fechac}, 'tracks': {'track': a, 'genre': b, 'date': ahora} }}, w=1)
+            	else:
+	            	result = coleccion.insert({'_id': email }, { '$set': { 'modified': ahora },'$push': { 'sells': {'email': email, 'track': cancion, 'genre': genero, 'date': fechac}, 'tracks': {'track': a, 'genre': b, 'date': ahora} } }, w=1)
+            	#print(result)
+        
         print("--------------------------------------------------")
 
         # Cerremos el cursor
