@@ -22,7 +22,7 @@ class Ui_IngresarCancion(object):
         print("este es el id del registrador "+str(id))"""
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(353, 498)
+        Form.resize(353, 525)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
         Form.setWindowIcon(QIcon('icono.png'))
@@ -123,8 +123,21 @@ class Ui_IngresarCancion(object):
         self.precioInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
 "color: rgb(72, 72, 72);")
         self.precioInput.setObjectName("precioInput")
+        #LINK A YOUTUBE
+        self.youtubeLabel = QtWidgets.QLabel(Form)
+        self.youtubeLabel.setGeometry(QtCore.QRect(50, 420, 90, 13))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.youtubeLabel.setFont(font)
+        self.youtubeLabel.setObjectName("youtubeLabel")
+        self.youtubeInput = QtWidgets.QLineEdit(Form)
+        self.youtubeInput.setGeometry(QtCore.QRect(140, 420, 161, 20))
+        self.youtubeInput.setStyleSheet("background-color: rgb(243, 243, 243);\n"
+"color: rgb(72, 72, 72);")
+        self.youtubeInput.setObjectName("youtubeInput")
+
         self.ingresarButton = QtWidgets.QPushButton(Form)
-        self.ingresarButton.setGeometry(QtCore.QRect(120, 430, 131, 41))
+        self.ingresarButton.setGeometry(QtCore.QRect(120, 460, 131, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -150,6 +163,8 @@ class Ui_IngresarCancion(object):
         self.duracionLabel.setText(_translate("Form", "Duración:"))
         self.tamanoLabel.setText(_translate("Form", "Tamaño:"))
         self.precioLabel.setText(_translate("Form", "Precio:"))
+        self.precioLabel.setText(_translate("Form", "Precio:"))
+        self.youtubeLabel.setText(_translate("Form", "Youtube Link:"))
         self.ingresarButton.setText(_translate("Form", "Ingresar"))
 
     def agregarCancion(self):
