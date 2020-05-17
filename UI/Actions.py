@@ -24,6 +24,7 @@ from searchArtist_form import Ui_searchArtist_form
 from searchAlbum_form import Ui_searchAlbum_form
 from searchTrack_form import Ui_searchTrack_form
 from misCanciones import Ui_MisCanciones
+from buscar_comprar import Ui_buscarComprar
 import psycopg2
 from config import config
 import sys
@@ -153,16 +154,12 @@ class Ui_bienvenidaLabel(object):
 "color: rgb(72, 72, 72);")
         self.misCancionesBoton.setObjectName("misCancionesBoton")
         self.misCancionesBoton.clicked.connect(self.openMisCanciones)
-        self.misCancionesLabel = QtWidgets.QLabel(bienvenidaLabel)
-        self.misCancionesLabel.setObjectName("misCancionesLabel")
-        self.misCancionesLabel.setGeometry(QtCore.QRect(320, 320, 100, 100))
-        font = QtGui.QFont()
-        font.setPointSize(8)
-        font.setBold(False)
-        font.setWeight(40)
-        self.misCancionesLabel.setFont(font)
-        self.misCancionesLabel.setStyleSheet("color: rgb(236, 236, 236);")
-        self.misCancionesLabel.setObjectName("label")
+        self.comprar = QtWidgets.QRadioButton(self.misCancionesGrupo)
+        self.comprar.setGeometry(QtCore.QRect(20, 40, 82, 17))
+        self.comprar.setObjectName("Comprar")
+        self.misCanciones = QtWidgets.QRadioButton(self.misCancionesGrupo)
+        self.misCanciones.setGeometry(QtCore.QRect(20, 85, 90, 17))
+        self.misCanciones.setObjectName("misCanciones")
 
 
         #Salir
@@ -224,8 +221,10 @@ class Ui_bienvenidaLabel(object):
         self.salir.clicked.connect(lambda:self.goOut(bienvenidaLabel))
         # GROUP BOX MIS CANCIONES
         self.misCancionesGrupo.setTitle(_translate("bienvenidaLabel", "Mis canciones"))
-        self.misCancionesBoton.setText(_translate("bienvenidaLabel", "Mis canciones"))
-        self.misCancionesLabel.setText(_translate("bienvenidaLabel", "Puedes ver tus\ntracks reproducidas\ny compradas"))
+        self.misCancionesBoton.setText(_translate("bienvenidaLabel", "Ir"))
+        self.comprar.setText(_translate("bienvenidaLabel", "Comprar"))
+        self.misCanciones.setText(_translate("bienvenidaLabel", "Mis Canciones"))
+        #self.misCancionesLabel.setText(_translate("bienvenidaLabel", "Puedes ver tus\ntracks reproducidas\ny compradas"))
 
     
     def openRegistrar(self):
@@ -457,11 +456,25 @@ class Ui_bienvenidaLabel(object):
     def openMisCanciones(self):
         #Se verifica cual esta seleccionado
         id=self.id
-        self.window = QtWidgets.QWidget()
-        self.ui = Ui_MisCanciones()
-        self.ui.setupUi(self.window)
-        #bienvenidaLabel.hide()
-        self.window.show()
+
+        if self.comprar.isChecked() == True:
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_buscarComprar()
+            self.ui.setupUi(self.window)
+            #bienvenidaLabel.hide()
+            self.window.show()
+        elif self.misCanciones.isChecked() == True:
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_MisCanciones()
+            self.ui.setupUi(self.window)
+            #bienvenidaLabel.hide()
+            self.window.show()
+        else:
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("INCOMPLETO")
+            blank.setText("Por favor selecciona una opcion de modificacion")
+            blank.exec()
         
 
 
