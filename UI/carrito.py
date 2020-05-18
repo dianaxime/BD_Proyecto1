@@ -131,6 +131,7 @@ class Ui_Carrito(object):
 
             # creación del cursor
             cur = conexion.cursor()
+
             cur.execute( "SELECT MAX(invoice.invoiceid) FROM invoice" )
             IDinvoice=cur.fetchall()
             invoiceoficial=IDinvoice[0][0]
@@ -153,6 +154,49 @@ class Ui_Carrito(object):
                 cur.execute( """INSERT INTO invoiceline (invoiceid, trackid, unitprice, quantity, invoicelineid) 
                     values (%s, %s, %s, %s, %s)""", (invoiceoficial, a, b, 1, invoicelineoficial))
                 invoicelineoficial += 1
+            from reportlab.lib.pagesizes import letter
+            from reportlab.pdfgen import canvas
+            from datetime import date 
+            x=date.today()
+            cur.execute( "SELECT firstname from customer where customerid=%s", (id,))
+            tracksB=cur.fetchall()
+            nombreComprador=tracksB[0][0]
+            cur.execute( "SELECT lastname from customer where customerid=%s", (id,))
+            tracksB=cur.fetchall()
+            apellidoComprador=tracksB[0][0]
+            canvas = canvas.Canvas("comprobanteVenta.pdf", pagesize=letter)
+            canvas.setLineWidth(.3)
+            canvas.setFont('Helvetica', 12)
+            canvas.drawString(30,750,'PYSTREAM.SA')
+            canvas.drawString(30,735,'COMPROBANTE DE COMPRA')
+            canvas.drawString(520,750,str(x))
+            canvas.line(480,747,580,747)
+            canvas.drawString(275,725,'MONTO POR:')
+            canvas.drawString(500,725,"$"+str(total))
+            canvas.line(378,723,580,723)
+            canvas.drawString(30,703,'REALIZADO POR:')
+            canvas.line(120,700,580,700)
+            canvas.drawString(160,703,nombreComprador+" "+apellidoComprador)
+            canvas.line(30,680,580,680)
+            canvas.drawString(190,682,"LISTADO DE CANCIONES COMPRADAS")
+            #canvas.drawString(190,662,"LISTADO DE CANCIONES COMPRADAS")
+            altura=642
+            var1="hola"
+            var2="vos"
+            """for i in range(3):
+                canvas.drawString(190,altura, var1+"..................."+var2)
+                altura-=20"""
+            row=0
+            cur.execute( """SELECT track.name, track.unitprice from carrito 
+                JOIN track on carrito.trackid=track.trackid
+                where state='vigente' and customerid=%s""",(id,))
+            tracksB=cur.fetchall()
+            for a,b in tracksB:
+                canvas.drawString(30,altura, a+".................................................................................................................$"+str(b))
+                altura-=20
+                row += 1
+            canvas.save()
+            
             cur.execute( """UPDATE carrito set state='completado' where customerid=%s""",(id,))
             conexion.commit()
 
@@ -161,7 +205,13 @@ class Ui_Carrito(object):
             blank.setWindowTitle("Accion Exitosa")
             blank.setText("Compra realizada con exito")
             blank.exec()
+            
             self.tableWidget.setRowCount(0)
+            
+
+#canvas.line(30,680,580,650)
+            
+            cur.close() 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
