@@ -459,13 +459,13 @@ class Ui_bienvenidaLabel(object):
 
         if self.comprar.isChecked() == True:
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_buscarComprar()
+            self.ui = Ui_buscarComprar(self.id)
             self.ui.setupUi(self.window)
             #bienvenidaLabel.hide()
             self.window.show()
         elif self.misCanciones.isChecked() == True:
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_MisCanciones()
+            self.ui = Ui_MisCanciones(self.id)
             self.ui.setupUi(self.window)
             #bienvenidaLabel.hide()
             self.window.show()

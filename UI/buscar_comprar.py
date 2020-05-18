@@ -18,6 +18,9 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 class Ui_buscarComprar(object):
+    def __init__(self,id):
+        self.id=id
+        print(self.id)
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(600, 280)
@@ -150,17 +153,41 @@ class Ui_buscarComprar(object):
 
     def openCarrito(self, Form):
         self.window = QtWidgets.QWidget()
-        self.ui = Ui_Carrito()
+        self.ui = Ui_Carrito(self.id)
         self.ui.setupUi(self.window)
         #Form.hide()
         self.window.show()
 
     def addCancion(self, Form):
-        blank=QMessageBox()
-        blank.setIcon(QMessageBox.Information)
-        blank.setWindowTitle("Accion Exitosa")
-        blank.setText("Cancion Agregada")
-        blank.exec()
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+            id=self.id
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+            r = self.tableWidget.currentRow()
+            nombretrack=self.tableWidget.item(r,0).text()
+            cur.execute( "SELECT track.trackid FROM track WHERE track.name=%s",(nombretrack,))
+            IDtrack=cur.fetchall()[0][0]
+            #print(IDtrack)
+            cur.execute( "INSERT INTO carrito (date_on, state, customerid, trackid) values (now(), 'vigente', %s, %s)", (id, IDtrack))
+            conexion.commit()
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("Accion Exitosa")
+            blank.setText("Cancion Agregada")
+            blank.exec()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+                print('Conexión finalizada.')
 
             
 

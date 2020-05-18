@@ -17,6 +17,58 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 class Ui_Carrito(object):
+    def __init__(self,id):
+        self.id=id
+        print(self.id)
+
+    def conectar(self):
+        #Buscar track
+        self.tableWidget.setRowCount(0)
+        id=self.id
+        #nombreTrack=self.inputTrack.text()
+        conexion = None
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            # Se muestra la versión por pantalla
+            print(db_version)
+            print(id)
+            row=0
+            cur.execute( """SELECT track.name, artist.name, track.unitprice from carrito 
+                JOIN track on carrito.trackid=track.trackid
+                JOIN album on track.albumid=album.albumid
+                JOIN artist on album.artistid=artist.artistid
+                where state='vigente' and customerid=%s""",(id,))
+            for a,b,c in cur.fetchall():
+                self.tableWidget.setRowCount(row + 1)
+                self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
+                self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
+                self.tableWidget.setItem(row, 2, QTableWidgetItem(str(c)))
+                row += 1
+            cur.close()                
+            
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+                print('Conexión finalizada.')
+
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(600, 400)
@@ -26,6 +78,7 @@ class Ui_Carrito(object):
         self.label.setGeometry(QtCore.QRect(230, 20, 180, 21))
         self.label.setStyleSheet("color: rgb(236, 236, 236);")
         self.label.setObjectName("label")
+
 
         self.deleteButton = QtWidgets.QPushButton(Form)
         self.deleteButton.setGeometry(QtCore.QRect(100, 350, 51, 23))
@@ -53,7 +106,7 @@ class Ui_Carrito(object):
         nombreColumnas = ("Track","Artist", "Unit Price")
         # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
-
+        self.conectar()
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -64,15 +117,13 @@ class Ui_Carrito(object):
         self.deleteButton.setText(_translate("Form", "Eliminar"))
         self.finalizarButton.setText(_translate("Form", "Finalizar Compra"))
 
-    def buscarCancion(self):
-        #Buscar track
-        self.tableWidget.setRowCount(0)
-        nombreTrack=self.inputTrack.text()
+    def finalizarCompra(self, Form):
+        id=self.id
+        #nombreTrack=self.inputTrack.text()
         conexion = None
         try:
             # Lectura de los parámetros de conexion
             params = config()
-
             #print(params)
             # Conexion al servidor de PostgreSQL
             print('Conectando a la base de datos PostgreSQL...')
@@ -80,49 +131,37 @@ class Ui_Carrito(object):
 
             # creación del cursor
             cur = conexion.cursor()
+            cur.execute( "SELECT MAX(invoice.invoiceid) FROM invoice" )
+            IDinvoice=cur.fetchall()
+            invoiceoficial=IDinvoice[0][0]
+            invoiceoficial += 1
+            cur.execute( "SELECT MAX(invoiceline.invoicelineid) FROM invoiceline" )
+            IDinvoiceline=cur.fetchall()
+            invoicelineoficial=IDinvoiceline[0][0]
+            invoicelineoficial += 1
+            total=0
+            print("hola1")
+            cur.execute("SELECT SUM(track.unitprice) FROM carrito JOIN track on carrito.trackid=track.trackid WHERE carrito.customerid = %s and carrito.state='vigente'",(id,))
+            tracksB=cur.fetchall()
+            total=tracksB[0][0]
+            """print(tracksB)
+            print(total)"""
+            cur.execute( "INSERT INTO invoice (invoiceid, invoicedate, customerid, total) values (%s, now(), %s, %s)", (invoiceoficial, id, total))
+            cur.execute("SELECT track.trackid, track.unitprice FROM carrito JOIN track on carrito.trackid=track.trackid WHERE carrito.customerid = %s and carrito.state='vigente'",(id,))
+            tracksB=cur.fetchall()
+            for a,b in tracksB :
+                cur.execute( """INSERT INTO invoiceline (invoiceid, trackid, unitprice, quantity, invoicelineid) 
+                    values (%s, %s, %s, %s, %s)""", (invoiceoficial, a, b, 1, invoicelineoficial))
+                invoicelineoficial += 1
+            cur.execute( """UPDATE carrito set state='completado' where customerid=%s""",(id,))
+            conexion.commit()
 
-            # Ejecución la consulta para obtener la conexión
-            print('La version de PostgreSQL es la:')
-            cur.execute('SELECT version()')
-
-            # Se obtienen los resultados
-            db_version = cur.fetchone()
-            # Se muestra la versión por pantalla
-            print(db_version)
-    
-            if nombreTrack != '' :
-                cur.execute( "SELECT track.name FROM track WHERE track.name=%s",(nombreTrack,))
-                IDtrackO=cur.fetchall()#[0][0]
-                if (len(IDtrackO)==0):
-                    blank=QMessageBox()
-                    blank.setIcon(QMessageBox.Information)
-                    blank.setWindowTitle("ERROR")
-                    blank.setText("El track no esta registrado")
-                    blank.exec()
-                else:
-                    cur.execute("""
-                            SELECT track.name, album.title, artist.name, track.unitprice
-                            FROM track  
-                                JOIN album ON album.albumid = track.albumid
-                                JOIN artist ON artist.artistid = album.artistid
-                            WHERE track.name = %s
-                            """,(nombreTrack,))
-
-                    row = 0
-                    for a,b,c,d in cur.fetchall():
-                        self.tableWidget.setRowCount(row + 1)
-                        self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
-                        self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
-                        self.tableWidget.setItem(row, 2, QTableWidgetItem(c))
-                        self.tableWidget.setItem(row, 3, QTableWidgetItem(str(d)))
-                        row += 1
-                    cur.close()                
-            else:
-                blank=QMessageBox()
-                blank.setIcon(QMessageBox.Information)
-                blank.setWindowTitle("INCOMPLETO")
-                blank.setText("Por favor llene los campos")
-                blank.exec()
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("Accion Exitosa")
+            blank.setText("Compra realizada con exito")
+            blank.exec()
+            self.tableWidget.setRowCount(0)
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -130,19 +169,39 @@ class Ui_Carrito(object):
                 conexion.close()
                 print('Conexión finalizada.')
 
-    def finalizarCompra(self, Form):
-        blank=QMessageBox()
-        blank.setIcon(QMessageBox.Information)
-        blank.setWindowTitle("Accion Exitosa")
-        blank.setText("Compra realizada con exito")
-        blank.exec()
-
     def deleteItem(self, Form):
-        blank=QMessageBox()
-        blank.setIcon(QMessageBox.Information)
-        blank.setWindowTitle("Accion Exitosa")
-        blank.setText("Se ha eliminado el track de su carrito")
-        blank.exec()
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+            #print(params)
+            id=self.id
+            # Conexion al servidor de PostgreSQL
+            print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            r = self.tableWidget.currentRow()
+            nombretrack=self.tableWidget.item(r,0).text()
+            print(nombretrack)
+            cur.execute("SELECT track.trackid FROM track WHERE track.name = %s",(nombretrack,))
+            trackid=cur.fetchall()
+            trackid=trackid[0][0]
+            cur.execute("DELETE FROM carrito WHERE trackid = %s and customerid=%s and state='vigente'",(trackid, id))
+            
+            conexion.commit()
+
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("Accion Exitosa")
+            blank.setText("Se ha eliminado el track de su carrito")
+            blank.exec()
+            self.conectar()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+                print('Conexión finalizada.')
 
             
 
