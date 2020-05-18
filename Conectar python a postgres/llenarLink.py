@@ -30,24 +30,24 @@ def conectar():
         b = cur.fetchall()
         b = int(b[0][0])
         a=3397
-        for a in range(111):
+        for a in range(b):
         	print (a)
         	customerID = randint(1,57)
-        	idt=3397+a
+        	#idt=3397+a
         	cur.execute('''
                         UPDATE track
                         SET link_video=%s,
                         u_updated=%s
                         WHERE trackid = %s
-                        ''',(link, customerID, idt))
+                        ''',(link, customerID, a))
         	a+=1
-        	print (idt)
+        	#print (idt)
 
                 #print(a)
 
         print("--------------------------------------------------")
 
-        #conexion.commit()
+        conexion.commit()
         # Cerremos el cursor
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
