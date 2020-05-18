@@ -22,12 +22,12 @@ from PyQt5.QtWidgets import QMessageBox
 class Ui_Reportes(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(378, 399)
+        Form.resize(400, 500)
         Form.setSizeIncrement(QtCore.QSize(0, 0))
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
         Form.setWindowIcon(QIcon('icono.png'))
         self.reportes = QtWidgets.QGroupBox(Form)
-        self.reportes.setGeometry(QtCore.QRect(20, 30, 331, 311))
+        self.reportes.setGeometry(QtCore.QRect(20, 30, 375, 450))
         self.reportes.setStyleSheet("color: rgb(236, 236, 236);")
         self.reportes.setObjectName("reportes")
         self.masCanciones = QtWidgets.QRadioButton(self.reportes)
@@ -66,14 +66,34 @@ class Ui_Reportes(object):
         self.playlistDuracion.setStyleSheet("color: rgb(236, 236, 236);")
         self.playlistDuracion.setObjectName("promedioDuracion")
 
+        self.ventasSemana = QtWidgets.QRadioButton(self.reportes)
+        self.ventasSemana.setGeometry(QtCore.QRect(20, 270, 300, 17))
+        self.ventasSemana.setStyleSheet("color: rgb(236, 236, 236);")
+        self.ventasSemana.setObjectName("ventasSemana")
+
+        self.ventasArtista = QtWidgets.QRadioButton(self.reportes)
+        self.ventasArtista.setGeometry(QtCore.QRect(20, 300, 320, 17))
+        self.ventasArtista.setStyleSheet("color: rgb(236, 236, 236);")
+        self.ventasArtista.setObjectName("ventasArtista")
+
+        self.ventasGenero = QtWidgets.QRadioButton(self.reportes)
+        self.ventasGenero.setGeometry(QtCore.QRect(20, 330, 310, 17))
+        self.ventasGenero.setStyleSheet("color: rgb(236, 236, 236);")
+        self.ventasGenero.setObjectName("ventasGenero")
+
+        self.reprodArtista = QtWidgets.QRadioButton(self.reportes)
+        self.reprodArtista.setGeometry(QtCore.QRect(20, 360, 300, 17))
+        self.reprodArtista.setStyleSheet("color: rgb(236, 236, 236);")
+        self.reprodArtista.setObjectName("reprodArtista")
+
         self.generarReporte = QtWidgets.QPushButton(self.reportes)
-        self.generarReporte.setGeometry(QtCore.QRect(220, 250, 71, 41))
+        self.generarReporte.setGeometry(QtCore.QRect(240, 400, 71, 23))
         self.generarReporte.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.generarReporte.setObjectName("generarReporte")
         #self.generarReporte.clicked.connect(self.goTo)
         self.volverButton = QtWidgets.QPushButton(Form)
-        self.volverButton.setGeometry(QtCore.QRect(20, 355, 75, 23))
+        self.volverButton.setGeometry(QtCore.QRect(50, 430, 75, 23))
         self.volverButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.volverButton.setObjectName("volverButton")
@@ -130,6 +150,30 @@ class Ui_Reportes(object):
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
+        elif self.ventasSemana.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_duracionPlaylist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.ventasArtista.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_duracionPlaylist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.ventasGenero.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_duracionPlaylist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.reprodArtista.isChecked():
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_duracionPlaylist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
         else:
             blank=QMessageBox()
             blank.setIcon(QMessageBox.Information)
@@ -157,6 +201,11 @@ class Ui_Reportes(object):
         self.generosArtista.setText(_translate("Form", "Artistas con mayor diversidad de géneros"))
         self.playlistArtist.setText(_translate("Form", "Cantidad de artistas diferentes por playlist"))
         self.playlistDuracion.setText(_translate("Form", "Duración de cada playlist"))
+
+        self.ventasSemana.setText(_translate("Form", "Total de ventas por semana dado un rango de fechas"))
+        self.ventasArtista.setText(_translate("Form", "Los N artistas con las mayores ventas para un rango de fechas"))
+        self.ventasGenero.setText(_translate("Form", "Total de ventas por género para un rango de fechas"))
+        self.reprodArtista.setText(_translate("Form", "Las N canciones con más reproducciones para un artista"))
         
         self.generarReporte.setText(_translate("Form", "Generar"))
         self.volverButton.setText(_translate("Form", "Volver"))
