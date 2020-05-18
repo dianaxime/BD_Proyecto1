@@ -29,21 +29,25 @@ def conectar():
         link = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&feature=youtu.be'
         b = cur.fetchall()
         b = int(b[0][0])
-        for a in range(b):
-            a=a+1
-            customerID = randint(1,57)
-            cur.execute('''
+        a=3397
+        for a in range(111):
+        	print (a)
+        	customerID = randint(1,57)
+        	idt=3397+a
+        	cur.execute('''
                         UPDATE track
                         SET link_video=%s,
                         u_updated=%s
                         WHERE trackid = %s
-                        ''',(link, customerID, a))
+                        ''',(link, customerID, idt))
+        	a+=1
+        	print (idt)
 
                 #print(a)
 
         print("--------------------------------------------------")
 
-        conexion.commit()
+        #conexion.commit()
         # Cerremos el cursor
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:

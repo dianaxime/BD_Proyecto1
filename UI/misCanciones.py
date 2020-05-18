@@ -9,8 +9,76 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
+import psycopg2
+from config import config
 
 class Ui_MisCanciones(object):
+    def __init__(self,id):
+        self.id=id
+
+    def conectar(self):
+        #Buscar track
+        self.tableWidget.setRowCount(0)
+        id=self.id
+        #nombreTrack=self.inputTrack.text()
+        conexion = None
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+
+            #print(params)
+            # Conexion al servidor de PostgreSQL
+            print('Conectando a la base de datos PostgreSQL...')
+            conexion = psycopg2.connect(**params)
+
+            # creación del cursor
+            cur = conexion.cursor()
+
+            # Ejecución la consulta para obtener la conexión
+            print('La version de PostgreSQL es la:')
+            cur.execute('SELECT version()')
+
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            # Se muestra la versión por pantalla
+            print(db_version)
+            print(id)
+            row=0
+            cur.execute( """SELECT track.name, album.title , genre.name, artist.name, track.link_video from track 
+                JOIN invoiceline on invoiceline.trackid=track.trackid
+                JOIN invoice on invoiceline.invoiceid=invoice.invoiceid
+                JOIN customer on invoice.customerid=customer.customerid
+                JOIN album on album.albumid =track.albumid 
+                JOIN artist on artist.artistid =album.artistid 
+                JOIN genre on genre.genreid =track.genreid 
+                WHERE  customer.customerid=%s
+                union all 
+                SELECT track.name, album.title , genre.name, artist.name, track.link_video from customer
+                JOIN creador_track on creador_track.creadorid=customer.customerid 
+                JOIN track on creador_track.trackid =track.trackid 
+                JOIN album on album.albumid =track.albumid 
+                JOIN artist on artist.artistid =album.artistid 
+                JOIN genre on genre.genreid =track.genreid
+                WHERE customer.customerid =%s""",(id,id))
+            for a,b,c,d,e in cur.fetchall():
+                self.tableWidget.setRowCount(row + 1)
+                self.tableWidget.setItem(row, 0, QTableWidgetItem(a))
+                self.tableWidget.setItem(row, 1, QTableWidgetItem(b))
+                self.tableWidget.setItem(row, 2, QTableWidgetItem(c))
+                self.tableWidget.setItem(row, 3, QTableWidgetItem(d))
+                self.tableWidget.setItem(row, 4, QTableWidgetItem(e))
+                
+                row += 1
+            cur.close()                
+            
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+                print('Conexión finalizada.')
     def setupUi(self, Form):
         Form.setObjectName("MisCanciones")
         Form.resize(680, 464)
@@ -37,7 +105,7 @@ class Ui_MisCanciones(object):
         nombreColumnas = ("Track","Album", "Genero", "Artist", "Youtube")
         # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
-
+        self.conectar()
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
