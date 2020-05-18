@@ -45,6 +45,7 @@ class Ui_MisCanciones(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Mis canciones"))
         self.label.setText(_translate("Form", "Mis Canciones"))
+        
 
 
 if __name__ == "__main__":
