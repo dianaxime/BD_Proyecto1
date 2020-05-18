@@ -12,6 +12,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
+import webbrowser
 from config import config
 
 class Ui_MisCanciones(object):
@@ -79,6 +80,11 @@ class Ui_MisCanciones(object):
             if conexion is not None:
                 conexion.close()
                 print('Conexión finalizada.')
+
+    def OpenLink(self,item):
+        if item.column() == 4:
+            webbrowser.open_new(item.text())
+
     def setupUi(self, Form):
         Form.setObjectName("MisCanciones")
         Form.resize(680, 464)
@@ -102,6 +108,7 @@ class Ui_MisCanciones(object):
         self.tableWidget.setColumnWidth(2, 125)
         self.tableWidget.setColumnWidth(3, 125)
         self.tableWidget.setColumnWidth(4, 125)
+        self.tableWidget.itemDoubleClicked.connect(self.OpenLink)
         nombreColumnas = ("Track","Album", "Genero", "Artist", "Youtube")
         # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
