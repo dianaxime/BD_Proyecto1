@@ -1,9 +1,7 @@
 import psycopg2
 from config import config
-import datetime
 from random import randint
 
-import radar 
 
 
 def conectar():
@@ -33,11 +31,13 @@ def conectar():
         b = int(b[0][0])
         for a in range(b):
             a=a+1
+            customerID = randint(1,57)
             cur.execute('''
                         UPDATE track
                         SET link_video=%s,
+                        u_updated=%s
                         WHERE trackid = %s
-                        ''',(link, a))
+                        ''',(link, customerID, a))
 
                 #print(a)
 
