@@ -194,8 +194,9 @@ class Ui_IngresarCancion(object):
             duracion=self.duracionInput.text()
             size=self.tamanoInput.text()
             precio=self.precioInput.text()
+            link=self.youtubeInput.text()
             #id=self.id
-            if nombre != '' or album != '' or tipo != '' or genero != '' or compositor != '' or duracion != '' or size != '' or precio != '':
+            if nombre != '' or album != '' or tipo != '' or genero != '' or compositor != '' or duracion != '' or size != '' or precio != '' or link!= '':
                 #Se selecciona el ID mayor y se crea el nuevo
                 cur.execute( "SELECT MAX(track.trackid) FROM track" )
                 IDTrack=cur.fetchall()
@@ -245,7 +246,7 @@ class Ui_IngresarCancion(object):
                     IDGenreOficial=(IDGenre[0][0])
                     #Se agrega a la DB
                     #cur.execute("""SELECT add_bitacora(%s::numeric, %s::varchar, 1::numeric, 1::numeric )""", (idRegistrador, nombre))
-                    cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice, u_added) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio, idRegistrador,))
+                    cur.execute("INSERT INTO track (trackid, name, albumid, mediatypeid, genreid, composer, milliseconds, bytes, unitprice, u_added, link_video) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ( IDoficial, nombre, IDAlbumOficial, IDMediaTypeOficial, IDGenreOficial, compositor, duracion, size, precio, idRegistrador, link))
                     cur.execute("INSERT INTO actividad_track (actividadid, esta_activo, trackid) VALUES (%s, %s, %s)", (IDoficial, False, IDoficial,))
                     cur.execute("INSERT INTO creador_track (relacionid, creadorid, trackid) VALUES (%s, %s, %s)", (IDoficialRel, idRegistrador, IDoficial,))
                     conexion.commit()

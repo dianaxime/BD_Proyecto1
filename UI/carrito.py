@@ -192,7 +192,8 @@ class Ui_Carrito(object):
                 where state='vigente' and customerid=%s""",(id,))
             tracksB=cur.fetchall()
             for a,b in tracksB:
-                canvas.drawString(30,altura, a+".................................................................................................................$"+str(b))
+                canvas.drawString(30,altura, a)
+                canvas.drawString(550,altura, "$"+str(b))
                 altura-=20
                 row += 1
             canvas.save()
