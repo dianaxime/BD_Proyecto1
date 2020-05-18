@@ -44,9 +44,9 @@ def conectar():
         	ORDER BY customer.email DESC
         	'''
         #)
-        fecha = '2009-01-01'
+        fecha = '2009-01-06'
         ahora = datetime.datetime.utcnow()
-        tiempo = ahora - datetime.timedelta(days=7)
+        tiempo = ahora - datetime.timedelta(days=30)
         cur.execute('''
         	SELECT customer.email, track."name", 
 			genre."name" as genre, invoice.invoicedate
@@ -60,7 +60,7 @@ def conectar():
         # Recorremos los resultados y los mostramos
         compras = cur.fetchall()
         for email, cancion, genero, fechac in compras:
-            print(email, cancion, genero, fechac)
+            #print(email, cancion, genero, fechac)
             cur.execute('''
             	SELECT DISTINCT(track."name"), genre."name"
             	FROM bitacora
@@ -74,16 +74,14 @@ def conectar():
             ''',(cancion, email, tiempo, ahora, 'add'))
             resul = cur.fetchall()
             for a, b in resul:
-            	print(a, b)
+            	#print(a, b)
             	if (coleccion.find({'_id': email}).count() > 0):
-            		if (coleccion.find({'_id': email}, {'sells': {'track': cancion, 'genre': genero}}).count()> 0):
-            			print("no hace nada")
-            		else:
-            			print("si hace algo")
-            		result = coleccion.update({'_id': email }, { '$set': { 'modified': ahora },'$push': { 'sells': {'email': email, 'track': cancion, 'genre': genero, 'date': fechac}, 'tracks': {'track': a, 'genre': b, 'date': ahora} }}, w=1)
+            		if (coleccion.find({ '_id': email, 'sells.track': cancion}).count() <= 0):
+            			result = coleccion.update({'_id': email }, { '$set': { 'modified': ahora },'$push': { 'sells': {'email': email, 'track': cancion, 'genre': genero, 'date': fechac}}}, w=1)
+            		if (coleccion.find({ '_id': email, 'tracks.track': a}).count() <= 0):
+            			result = coleccion.update({'_id': email }, { '$set': { 'modified': ahora },'$push': { 'tracks': {'track': a, 'genre': b, 'date': ahora} }}, w=1)
             	else:
 	            	result = coleccion.insert({'_id': email }, { '$set': { 'modified': ahora },'$push': { 'sells': {'email': email, 'track': cancion, 'genre': genero, 'date': fechac}, 'tracks': {'track': a, 'genre': b, 'date': ahora} } }, w=1)
-            	#print(result)
         
         print("--------------------------------------------------")
 
