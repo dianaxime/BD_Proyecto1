@@ -87,8 +87,10 @@ COMMIT;
 
 
 
+--drop materialized view ventasdatacube;
+
 CREATE MATERIALIZED VIEW VentasDataCube AS
-select genre.name as genero, artist.name as artista, year_actual, quarter_actual, month_actual, week_of_year, SUM(invoice.total), COUNT(invoice.total)
+select genre.name as genero, date_actual, first_day_of_week,  last_day_of_week, artist.name as artista, year_actual, quarter_actual, month_actual, week_of_year, SUM(invoice.total), COUNT(invoice.total)
 FROM invoice
 INNER JOIN d_date on date_actual = date(invoice.invoicedate)
 inner join invoiceline on invoiceline.invoiceid = invoice.invoiceid 
@@ -96,4 +98,4 @@ inner join track on track.trackid = invoiceline.trackid
 inner join genre on genre.genreid = track.genreid 
 inner join album on album.albumid = track.albumid 
 inner join artist on artist.artistid = album.albumid 
-GROUP BY CUBE(genero, artista, year_actual, quarter_actual, month_actual, week_of_year);
+GROUP BY CUBE(genero, date_actual, first_day_of_week,  last_day_of_week, artista, year_actual, quarter_actual, month_actual, week_of_year);
