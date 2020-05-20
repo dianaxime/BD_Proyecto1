@@ -23,12 +23,12 @@ coleccion=db.recomendaciones
 class Ui_Recomendaciones(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(515, 514)
+        Form.resize(600, 514)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);\n"
 "color: rgb(236, 236, 236);")
         Form.setWindowIcon(QIcon('icono.png'))
         self.titulo = QtWidgets.QLabel(Form)
-        self.titulo.setGeometry(QtCore.QRect(130, 20, 271, 41))
+        self.titulo.setGeometry(QtCore.QRect(160, 20, 271, 41))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.titulo.setFont(font)
@@ -57,15 +57,16 @@ class Ui_Recomendaciones(object):
         self.generarButton.setObjectName("generarButton")
         self.generarButton.clicked.connect(self.generar)
         self.tableWidget = QtWidgets.QTableWidget(Form)
-        self.tableWidget.setGeometry(QtCore.QRect(40, 140, 421, 331))
+        self.tableWidget.setGeometry(QtCore.QRect(40, 140, 520, 331))
         self.tableWidget.setStyleSheet("background-color: rgb(234, 234, 234);\n"
 "color: rgb(72, 72, 72);")
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(2)
+        self.tableWidget.setColumnCount(3)
         self.tableWidget.setRowCount(0)
-        self.tableWidget.setColumnWidth(0, 210)
-        self.tableWidget.setColumnWidth(1, 208)
-        nombreColumnas = ("Track","Genero")
+        self.tableWidget.setColumnWidth(0, 175)
+        self.tableWidget.setColumnWidth(1, 171)
+        self.tableWidget.setColumnWidth(2, 171)
+        nombreColumnas = ("Email","Track","Genero")
         # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
 
@@ -190,14 +191,17 @@ class Ui_Recomendaciones(object):
                 ORDER BY customer.email DESC
                 '''
             )
+            row = 0
             resul = cur.fetchall()
             for email, genre, cuenta in resul:
                 if cuenta > 5:
                     a = coleccion.aggregate([{ '$match': { '_id': email } },{ '$unwind': '$tracks' },{ '$match': { 'tracks.genre': genre }},{ '$project': { 'track': '$tracks.track', 'genre': '$tracks.genre' }}])
                     for i in a:
-                        print(i['_id'],' ',i['track'],' ',i['genre'])
-            
-
+                        self.tableWidget.setRowCount(row + 1)
+                        self.tableWidget.setItem(row, 0, QTableWidgetItem(i['_id']))
+                        self.tableWidget.setItem(row, 1, QTableWidgetItem(i['track']))
+                        self.tableWidget.setItem(row, 2, QTableWidgetItem(i['genre']))
+                        row += 1
             
 
             
