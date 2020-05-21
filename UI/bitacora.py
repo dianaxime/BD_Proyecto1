@@ -81,9 +81,9 @@ class Ui_Bitacora(object):
         # GROUP BOX
         self.bitacoraGrupo.setTitle(_translate("Form", "Seleccionar"))
         self.bitacoraBoton.setText(_translate("Form", "Ver"))
-        self.add.setText(_translate("Form", "Add"))
-        self.update.setText(_translate("Form", "Update"))
-        self.delete.setText(_translate("Form", "Delete"))
+        self.add.setText(_translate("Form", "Track"))
+        self.update.setText(_translate("Form", "Artist"))
+        self.delete.setText(_translate("Form", "Álbum"))
         self.volverButton.clicked.connect(lambda:self.openReportes(Form))
 
     def openReportes(self, Form):
@@ -109,11 +109,11 @@ class Ui_Bitacora(object):
             # Se obtienen los resultados
             db_version = cur.fetchone()
             if self.add.isChecked() == True:
-                cur.execute("SELECT nombre_object, email, accion, tipo, date_on from bitacora where accion='add' order by date_on DESC")
+                cur.execute("SELECT nombre_object, email, accion, tipo, date_on from bitacora where tipo='track' order by date_on DESC")
             elif self.update.isChecked() == True:
-                cur.execute("SELECT nombre_object, email, accion, tipo, date_on from bitacora where accion='update' order by date_on DESC")
+                cur.execute("SELECT nombre_object, email, accion, tipo, date_on from bitacora where tipo='artist' order by date_on DESC")
             elif self.delete.isChecked() == True:
-                cur.execute("SELECT nombre_object, email, accion, tipo, date_on from bitacora where accion='delete' order by date_on DESC")
+                cur.execute("SELECT nombre_object, email, accion, tipo, date_on from bitacora where tipo='album' order by date_on DESC")
             else:
                 cur.execute('''SELECT bitacora.nombre_object, 
                 bitacora.email, 

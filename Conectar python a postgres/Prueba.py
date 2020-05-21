@@ -73,20 +73,27 @@ def conectar():
         #insercion de datos
         # Ejecutamos una insercion registrar artista
         #necesitamos name y artist id
-        nameArtista="Maluma"
+        """nameArtista="Maluma"
         cur.execute( "SELECT MAX(artist.artistid) FROM artist" )
         IDArtist=cur.fetchall()
         IDoficial=(IDArtist[0][0])
         IDoficial += 1
         cur.execute("INSERT INTO artist (artistid, name)VALUES (%s, %s)", ( IDoficial, nameArtista))
-        #conexion.commit()
-        cur.execute("SELECT * FROM artist")
+        #conexion.commit()"""
+        #cur.execute("SELECT * FROM artist")
+        print("---------------ESTE ES EL QUERY QUE QUIERO-----------------------------------------")
+        cur.execute("""SELECT week_of_year, first_day_of_week, last_day_of_week, sum, count
+        FROM ventasdatacube
+        WHERE year_actual = 2009 AND
+            quarter_actual IS NULL AND month_actual IS NULL AND genero IS NULL AND artista is null and 
+            week_of_year IS NOT null and week_of_year >= 2 and week_of_year <= 8
+        AND date_actual IS null AND first_day_of_week IS not null AND last_day_of_week is not NULL order by week_of_year asc""")
 
         # Recorremos los resultados y los mostramos
-        for a,b in cur.fetchall() :
-            print(a,b)
+        for a,b,c,d,e in cur.fetchall() :
+            print(a,b,c,d,e)
 
-        print("--------------------------------------------------")
+        print("---------------ESTE ES EL QUERY QUE QUIERO-----------------------------------------")
 
         #insertamos album
         #necesitamos title, artistid, albumid

@@ -13,11 +13,12 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
+import csv
 
 class Ui_ReprodArtist(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(471, 401)
+        Form.resize(500, 440)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
         Form.setWindowIcon(QIcon('icono.png'))
         self.titleForm = QtWidgets.QLabel(Form)
@@ -51,6 +52,12 @@ class Ui_ReprodArtist(object):
                 # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
         self.buscarBoton.clicked.connect(self.generarDatos)
+        self.reporteButton = QtWidgets.QPushButton(Form)
+        self.reporteButton.setGeometry(QtCore.QRect(400, 410, 75, 23))
+        self.reporteButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.reporteButton.setObjectName("reporteButton")
+        self.reporteButton.clicked.connect(self.generarCsv)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -60,7 +67,7 @@ class Ui_ReprodArtist(object):
         self.titleForm.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Canciones más reproducidas por artista</span></p></body></html>"))
         self.label_2.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:9pt; color:#ffffff;\">Artista:</span></p></body></html>"))
         self.buscarBoton.setText(_translate("Form", "Ver"))
-
+        self.reporteButton.setText(_translate("Form", "CSV"))
     def generarDatos(self):
         conexion=None
         try:
@@ -114,6 +121,42 @@ group by reproduccion.trackid, artist.name, track.name""",(artista,))
                 blank.setText("Por favor llene los campos")
                 blank.exec()
 
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+
+    def generarCsv(self):
+        conexion = None
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+            # Conexion al servidor de PostgreSQL
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            # Ejecución la consulta para obtener la conexión
+            cur.execute('SELECT version()')
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            artista=self.inputArtista.text()
+            ##escritura a .csv
+            with open('reproduccionesPorArtistaReporteria.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Track id', 'Artista', 'Canción','Reproducción'])
+                if artista != '' :
+                    cur.execute( """SELECT reproduccion.trackid, artist.name, track.name, COUNT(reproduccion.trackid)
+                    from reproduccion 
+                    join track on track.trackid = reproduccion.trackid 
+                    join album on album.albumid = track.albumid 
+                    join artist on artist.artistid = album.artistid 
+                    where artist.name = %s
+                    group by reproduccion.trackid, artist.name, track.name""",(artista,))
+                    for a,b,c,d in cur.fetchall():
+                        csv_writer.writerow([str(a), str(b), str(c), str(d)])
+            # Cerremos el cursor
+            cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:

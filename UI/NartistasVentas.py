@@ -13,12 +13,13 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
+import csv
 
 
 class Ui_NartistasVentas(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(471, 425)
+        Form.resize(500, 440)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
         Form.setWindowIcon(QIcon('icono.png'))
         self.titleForm = QtWidgets.QLabel(Form)
@@ -68,6 +69,12 @@ class Ui_NartistasVentas(object):
         self.label_4.setGeometry(QtCore.QRect(250, 70, 121, 16))
         self.label_4.setObjectName("label_4")
         self.buscarBoton.clicked.connect(self.generarDatos)
+        self.reporteButton = QtWidgets.QPushButton(Form)
+        self.reporteButton.setGeometry(QtCore.QRect(400, 410, 75, 23))
+        self.reporteButton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.reporteButton.setObjectName("reporteButton")
+        self.reporteButton.clicked.connect(self.generarCsv)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -79,6 +86,7 @@ class Ui_NartistasVentas(object):
         self.buscarBoton.setText(_translate("Form", "Ver"))
         self.label_3.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:9pt; color:#ffffff;\">Fin:</span></p></body></html>"))
         self.label_4.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:9pt; color:#ffffff;\">Cantidad de artistas:</span></p></body></html>"))
+        self.reporteButton.setText(_translate("Form", "CSV"))
 
     def generarDatos(self):
         conexion=None
@@ -135,6 +143,44 @@ ORDER BY sum desc LIMIT %s""",(inicio, fin,cantArtist))
                 blank.setText("Por favor llene los campos")
                 blank.exec()
 
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conexion is not None:
+                conexion.close()
+
+    def generarCsv(self):
+        conexion = None
+        try:
+            # Lectura de los parámetros de conexion
+            params = config()
+            # Conexion al servidor de PostgreSQL
+            conexion = psycopg2.connect(**params)
+            # creación del cursor
+            cur = conexion.cursor()
+            # Ejecución la consulta para obtener la conexión
+            cur.execute('SELECT version()')
+            # Se obtienen los resultados
+            db_version = cur.fetchone()
+            inicio=self.inputInicio.text()
+            fin=self.inputInicio_2.text()
+            cantArtist=self.inputCantidad.text()
+            ##escritura a .csv
+            with open('nartistasVentasReporteria.csv', mode='w', newline='') as cvs_file:
+                csv_writer = csv.writer(cvs_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writerow(['Fecha', 'Artista', 'Total','Ventas'])
+                if inicio != '' and fin != '' and cantArtist!='':
+                    cur.execute( """SELECT date_actual, artista, sum, count
+                    FROM ventasdatacube
+                    WHERE year_actual is NULL AND 
+                        quarter_actual IS NULL AND month_actual is NULL AND genero IS NULL AND artista is not null and 
+                        week_of_year IS NULL AND first_day_of_week IS null AND last_day_of_week is null
+                        and date_actual >= %s and date_actual <= %s 
+                    ORDER BY sum desc LIMIT %s""",(inicio, fin,cantArtist))#print (cur.fetchall())
+                    for a,b,c,d in cur.fetchall():
+                        csv_writer.writerow([str(a), str(b), str(c), str(d)])
+            # Cerremos el cursor
+            cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
