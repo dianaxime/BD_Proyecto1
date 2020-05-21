@@ -17,6 +17,10 @@ from usuariosCanciones import *
 from artistasGeneros import *
 from artistPlaylist import *
 from duracionPlaylist import *
+from ventasSemanales import *
+from NartistasVentas import *
+from ventasGenero import *
+from nReproducionesArtista import *
 from PyQt5.QtWidgets import QMessageBox
 
 class Ui_Reportes(object):
@@ -152,25 +156,25 @@ class Ui_Reportes(object):
             self.window.show()
         elif self.ventasSemana.isChecked():
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_duracionPlaylist()
+            self.ui = Ui_VentasSemanales()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
         elif self.ventasArtista.isChecked():
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_duracionPlaylist()
+            self.ui = Ui_NartistasVentas()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
         elif self.ventasGenero.isChecked():
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_duracionPlaylist()
+            self.ui = Ui_VentasGenero()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()
         elif self.reprodArtista.isChecked():
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_duracionPlaylist()
+            self.ui = Ui_ReprodArtist()
             self.ui.setupUi(self.window)
             #Form.hide()
             self.window.show()

@@ -14,11 +14,12 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 
-class Ui_Form(object):
+class Ui_ReprodArtist(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(471, 401)
         Form.setStyleSheet("background-color: rgb(85, 85, 255);")
+        Form.setWindowIcon(QIcon('icono.png'))
         self.titleForm = QtWidgets.QLabel(Form)
         self.titleForm.setGeometry(QtCore.QRect(50, 10, 401, 31))
         self.titleForm.setStyleSheet("color: rgb(236, 236, 236);")
@@ -43,9 +44,9 @@ class Ui_Form(object):
         self.tableWidget.setColumnCount(4)
         self.tableWidget.setRowCount(0)
         self.tableWidget.setColumnWidth(0, 80)
-        self.tableWidget.setColumnWidth(1, 80)
-        self.tableWidget.setColumnWidth(2, 80)
-        self.tableWidget.setColumnWidth(3, 80)
+        self.tableWidget.setColumnWidth(1, 110)
+        self.tableWidget.setColumnWidth(2, 104)
+        self.tableWidget.setColumnWidth(3, 109)
         nombreColumnas = ("Track Id", "Artista", "Cancion", "Reproducciones")
                 # Establecer las etiquetas de encabezado horizontal usando etiquetas
         self.tableWidget.setHorizontalHeaderLabels(nombreColumnas)
@@ -55,7 +56,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Reproducciones por artista"))
         self.titleForm.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Canciones más reproducidas por artista</span></p></body></html>"))
         self.label_2.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:9pt; color:#ffffff;\">Artista:</span></p></body></html>"))
         self.buscarBoton.setText(_translate("Form", "Ver"))
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Ui_ReprodArtist()
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
