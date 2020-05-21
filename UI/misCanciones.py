@@ -168,7 +168,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_MisCanciones()
+    ui = Ui_MisCanciones(57)
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
