@@ -13,6 +13,10 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 import psycopg2
 from config import config
 import csv
+from PyQt5.QtWidgets import QMessageBox
+from updateArtist import *
+from updateTracks import *
+from updateAlbum import *
 
 class Ui_Bitacora(object):
 
@@ -55,7 +59,7 @@ class Ui_Bitacora(object):
         self.bitacoraGrupo.setStyleSheet("color: rgb(236, 236, 236);")
         self.bitacoraGrupo.setObjectName("bitacoraGrupo")
         self.bitacoraBoton = QtWidgets.QPushButton(self.bitacoraGrupo)
-        self.bitacoraBoton.setGeometry(QtCore.QRect(310, 12, 75, 31))
+        self.bitacoraBoton.setGeometry(QtCore.QRect(210, 12, 75, 31))
         self.bitacoraBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
 "color: rgb(72, 72, 72);")
         self.bitacoraBoton.setObjectName("bitacoraBoton")
@@ -63,12 +67,18 @@ class Ui_Bitacora(object):
         self.add.setGeometry(QtCore.QRect(20, 20, 82, 17))
         self.add.setObjectName("add")
         self.update = QtWidgets.QRadioButton(self.bitacoraGrupo)
-        self.update.setGeometry(QtCore.QRect(100, 20, 82, 17))
+        self.update.setGeometry(QtCore.QRect(85, 20, 82, 17))
         self.update.setObjectName("update")
         self.delete = QtWidgets.QRadioButton(self.bitacoraGrupo)
-        self.delete.setGeometry(QtCore.QRect(200, 20, 82, 17))
+        self.delete.setGeometry(QtCore.QRect(145, 20, 50, 17))
         self.delete.setObjectName("delete")
         self.bitacoraBoton.clicked.connect(self.conectarDB)
+        self.detalleBoton = QtWidgets.QPushButton(self.bitacoraGrupo)
+        self.detalleBoton.setGeometry(QtCore.QRect(300, 12, 90, 31))
+        self.detalleBoton.setStyleSheet("background-color: rgb(206, 206, 206);\n"
+"color: rgb(72, 72, 72);")
+        self.detalleBoton.setObjectName("bitacoraBoton")
+        self.detalleBoton.clicked.connect(self.detalleUpdate)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -81,6 +91,7 @@ class Ui_Bitacora(object):
         # GROUP BOX
         self.bitacoraGrupo.setTitle(_translate("Form", "Seleccionar"))
         self.bitacoraBoton.setText(_translate("Form", "Ver"))
+        self.detalleBoton.setText(_translate("Form", "Detalle Update"))
         self.add.setText(_translate("Form", "Track"))
         self.update.setText(_translate("Form", "Artist"))
         self.delete.setText(_translate("Form", "Álbum"))
@@ -140,6 +151,36 @@ class Ui_Bitacora(object):
             if conexion is not None:
                 conexion.close()
 
+    def detalleUpdate(self):
+        if self.add.isChecked() == True:
+            #historial de track
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_UpdateTracks()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+            
+        elif self.update.isChecked() == True:
+            #historial de artist
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_UpdateArtist()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        elif self.delete.isChecked() == True:
+            #historial de album
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_UpdateAlbum()
+            self.ui.setupUi(self.window)
+            #Form.hide()
+            self.window.show()
+        else:
+            blank=QMessageBox()
+            blank.setIcon(QMessageBox.Information)
+            blank.setWindowTitle("ERROR")
+            blank.setText("Debe seleccionar una opcion a consultar")
+            blank.exec()  
+            
     
 
 

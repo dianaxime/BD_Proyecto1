@@ -165,6 +165,11 @@ class Ui_Simulaciones(object):
                     invoiceoficial+=1
                     invoicelineoficial+=1
                     print("--------------------------")
+                exito=QMessageBox()
+                exito.setIcon(QMessageBox.Information)
+                exito.setWindowTitle("Accion Exitosa")
+                exito.setText("Revisa tu DB, los datos generados se agregaron")
+                exito.exec()
 
                 #conexion.commit()
             else:
