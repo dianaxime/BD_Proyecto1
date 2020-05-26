@@ -127,7 +127,7 @@ class Ui_Simulaciones(object):
                     idtrack=idtrack[0][0]
                     print(idtrack)
                     cur.execute( """INSERT into reproduccion (trackid) VALUES (%s) """,(idtrack,))
-                    conexion.commit()
+                    
 
                 print("------------------------------")
                 #quiero comprar x canciones
@@ -171,7 +171,7 @@ class Ui_Simulaciones(object):
                 exito.setText("Revisa tu DB, los datos generados se agregaron")
                 exito.exec()
 
-                #conexion.commit()
+                conexion.commit()
             else:
                 blank=QMessageBox()
                 blank.setIcon(QMessageBox.Information)
